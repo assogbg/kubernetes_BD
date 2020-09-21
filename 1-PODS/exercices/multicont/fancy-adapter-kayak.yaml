@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: booking-app-kayak
+  name: booking-app-kayak
+spec:
+  containers:
+  - image: pgolard/test-main-booking:v4
+    name: test-main-booking
+    ports:
+    - containerPort: 33
+  - image: pgolard/test-adapter-kayak:v4
+    name: test-adapter-kayak
+    #ports:
+    #- containerPort: 9096
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}

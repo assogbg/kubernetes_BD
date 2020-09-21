@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  testAdapterAirbnb:
+    build: ./testAdapterAirbnb
+    image: test-adapter-airbnb
+    container_name: test-adapter-airbnb
+    ports:
+            - "9096:9096"
+  testAdapterKayak:
+    build: ./testAdapterKayak
+    image: test-adapter-kayak
+    container_name: test-adapter-kayak
+    ports:
+            - "9095:9095"
+  testMain:
+    build: ./testMain
+    image: test-main-booking
+    container_name: test-main-booking
+    ports:
+            - "33:33"
+    environment:
+        - TEST_ADAPTER_AIRBNB=test-adapter-airbnb
+        - TEST_ADAPTER_KAYAK=test-adapter-kayak

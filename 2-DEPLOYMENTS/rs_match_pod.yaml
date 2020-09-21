@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginxbasicrs
+  labels:
+    app: nginxbasicrs
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      id: calc
+  template:
+    metadata:
+      labels:
+        id: calc
+    spec:
+      containers:
+      - name: nginx
+        image: nginx

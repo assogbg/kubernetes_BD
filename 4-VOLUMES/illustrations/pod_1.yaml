@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostname-pod
+spec:
+  containers:
+  - name: fdlogger
+    image: fluent/fluentd
+    volumeMounts:
+    - mountPath: "/var/log"
+      name: hostname-pv-storage
+  - name: webcont
+    image: nginx
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - mountPath: "/var/log/nginx/"
+      name: hostname-pv-storage
+  volumes:
+  - name: hostname-pv-storage
+    persistentVolumeClaim:
+      claimName: hostname-pv-claim

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-calc
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - echo "important calculation"; sleep 1d
+    image: nginx
+    name: pod-calc

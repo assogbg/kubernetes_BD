@@ -18,7 +18,7 @@ console.log(`Running on http://${HOST}:${PORT}`);
 * Route definition
 * */
 
-app.get('/', function(req, res) {
+app.get('/hello', function(req, res) {
 
-    res.send('This is the POD section exercices Hello world ')
+    res.send('This is the POD section exercices Hello world from ciro')
 });

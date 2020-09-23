@@ -47,10 +47,7 @@ In the above example, we can curl our API by doing the following command:
 Once we have created our application, we would like to containerize it with Docker. For doing so we generate a simple DockerFile.
 
 ```
-FROM node:latest
-
-RUN apt-get update
-RUN apt-get install curl telnet nano -y
+FROM assogbg/based_image:v1
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -72,4 +69,4 @@ In order to build your image:
 
 If you want you can push that image to your docker hub directory after logged in:
 > docker login
-> docker push your_image_tag 
+> docker push your_image_tag

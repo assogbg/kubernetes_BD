@@ -11,12 +11,27 @@
 <tr>
 <td>
 <pre>
-{
-  "id": 1,
-  "username": "joe",
-  "email": "joe@example.com",
-  "order_id": "3544fc0"
-}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ms-bye-dep
+  name: ms-bye-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-bye-dep
+  template:
+    metadata:
+      labels:
+        app: ms-bye-dep
+    spec:
+      containers:
+      - image: pgolard/ms-bye:v1
+        name: ms-bye
+        ports:
+        - containerPort: 9999
 </pre>
 </td>
 <td>

@@ -2,7 +2,6 @@
 
 ## Pods
 
-
 <table>
 <tr>
 <th>Json 1</th>
@@ -35,31 +34,29 @@ spec:
 </pre>
 </td>
 <td>
-
-```yaml
+<pre>
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ms-bye-dep
-  name: ms-bye-dep
+    app: ms-hello-dep
+  name: ms-hello-dep
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: ms-bye-dep
+      app: ms-hello-dep
   template:
     metadata:
       labels:
-        app: ms-bye-dep
+        app: ms-hello-dep
     spec:
       containers:
-      - image: pgolard/ms-bye:v1
-        name: ms-bye
+      - image: pgolard/ms-hello:v1
+        name: ms-hello
         ports:
-        - containerPort: 9999
-```
-
+        - containerPort: 7777
+</pre>
 </td>
 </tr>
 </table>

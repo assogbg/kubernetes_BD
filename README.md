@@ -22,18 +22,16 @@ This will give you some help you figure out the huge revolution that happened in
 Note that the different sections have been thought, written and optimized to be followed in the sections order.
 Here the different parts of this training:
 
-1. **[KUBERNETES ARCHITECTURE OVERVIEW](overview.md)**
-2. **[PODS](1-PODS/pods.md)**
-3. **[DEPLOYMENTS](2-DEPLOYMENTS/deployments.md)**
-4. **[SERVICES](3-SERVICES/services.md)**
-5. **[VOLUMES](4-VOLUMES/volumes.md)**
-6. **[INGRESS](5-INGRESS/ingress.md)**
-7. **[HANDS-ON USE CASE](to_complete.md)**
-
-
-### Hands-on
-
-**Actively practicing the hands-on sections** is mandatory if you want to obtain a good understanding of the theory and implement Kubernetes in production.
+2. **[DOCKER/NODE.js REMINDER](docker-image/reminder.md)**
+3. **[PODS](1-PODS/pods.md)**
+4. **[DEPLOYMENTS](2-DEPLOYMENTS/deployments.md)**
+5. **[SERVICES](3-SERVICES/services.md)**
+6. **[VOLUMES](4-VOLUMES/volumes.md)**
+7. **[INGRESS](5-INGRESS/ingress.md)**
+8. **[CONFIGMAPS](6-CONFIGMAPS/configmaps.md)**
+9. **[SECRETS](7-SECRETS/secrets.md)**
+10. **[MULTICONTAINERS](8-MULTICONTAINERS/multicontainers.md)**
+11. **[HANDS-ON USE CASE](USE_CASES/usecases.md)**
 
 Therefore, you will need to install locally kubernetes or use a cloud provider.
 We will use minikube for all the exercices, please follow this installation tutorial: https://kubernetes.io/docs/tasks/tools/install-minikube/

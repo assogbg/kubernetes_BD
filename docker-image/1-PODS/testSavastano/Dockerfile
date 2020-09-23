@@ -1,7 +1,4 @@
-FROM node:latest
-
-RUN apt-get update
-RUN apt-get install curl telnet nano -y
+FROM pgolard/node-utils:v1
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -13,5 +10,5 @@ COPY * ./
 
 RUN npm install
 
-EXPOSE 7777
+EXPOSE 9999
 CMD [ "npm", "start" ]

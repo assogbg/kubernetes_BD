@@ -1,4 +1,4 @@
-FROM node:latest
+FROM pgolard/node-utils:v1
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -10,5 +10,5 @@ COPY * ./
 
 RUN npm install
 
-EXPOSE 9999
+EXPOSE 7777
 CMD [ "npm", "start" ]

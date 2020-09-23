@@ -1,6 +1,6 @@
 As you might know Kubernetes helps orchestrate containers applications. Therefore, it is important to know how to build a docker image in our case.
 
-For all the training, we will use node.js web API containerized with docker that will allow us to test and highlight Kubernetes capabilities.
+For all the training, we will use node.js web API containerized with docker that will allow us to test and highlight Kubernetes capabilities. In this section, you will find in each directories the docker images used for the kubernetes exercices.
 
 ### Node.js web api
 
@@ -69,4 +69,5 @@ In order to build your image:
 
 If you want you can push that image to your docker hub directory after logged in:
 > docker login
+
 > docker push your_image_tag

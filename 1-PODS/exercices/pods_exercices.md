@@ -1,38 +1,9 @@
-# Home made custom node js api - gomorra
-
-## local docker
-> docker-compose up --build
-
->  curl -X GET http://0.0.0.0:7777
-```
-This is the GREAT ciro di marzo API v3%                                                
-```
-
-> curl -X GET http://0.0.0.0:7777/getImmortale\?clan\=savas
-
-```                                                    
-sempre per noi ciro - clan savas%  
- ```
-
-
-### Build and push image to you docker hub
-> docker build --tag pgolard/test-ciro:v3 ./docker-image/testCiro/.
-> docker push pgolard/test-ciro:v3
-> docker build --tag pgolard/test-savastano:v3 ./docker-image/testSavastano/.
-> docker push pgolard/test-savastano:v3
-
-### Now modify the app json file to make sure we create the 4th version
-> docker build --tag pgolard/test-ciro:v4 ./docker-image/testCiro/.
-> docker push pgolard/test-ciro:v4
-> docker build --tag pgolard/test-savastano:v4 ./docker-image/testSavastano/.
-> docker push pgolard/test-savastano:v4
-
 
 ## pods
 
 ### create 2 pods based on the third image
-> kubectl run --dry-run --restart=Never -o yaml savastano --image=pgolard/test-savastano:v3 --port=9999 > savastanopod.yaml
-> kubectl run --dry-run=client --restart=Never -o yaml ciro --image=pgolard/test-ciro:v3 --port=7777 > ciropod.yaml
+> kubectl run --dry-run --restart=Never -o yaml savastano --image=assogbg/test-savastano:v1 --port=9999 > savastanopod.yaml
+> kubectl run --dry-run=client --restart=Never -o yaml ciro --image=assogbg/test-ciro:v1 --port=7777 > ciropod.yaml
 
 ### retrieve their ip adresses
 > kubectl get pods -o wide

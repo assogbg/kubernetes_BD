@@ -1,5 +1,15 @@
 # Pods
 
+## Questions
+
+- How do
+-
+-
+-
+-
+-
+-
+
 ## Contents
 * [Description](#Description)
   * [Yaml details](#yaml-details)
@@ -37,7 +47,7 @@ A Pod is a **logical collection** of one or more **containers** that encapsulate
 
 Pods are **transient** :arrow_right: **designed to be ephemeral in nature**  (can be destroyed at any time)
 
-Containers in a pod share the same network, storage, same lifecycle *TODO check if it is true and illustrate in multicont*
+Containers in a pod share the same network, storage, same lifecycle
 
 What this means is that containers inside the same Pod
 - can communicate with each other directly

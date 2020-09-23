@@ -163,7 +163,7 @@ containers:
 
 A Persistent Volume is a volume made available within the cluster that will remain available even after containers, pods or nodes restart.
 
-A pod can be linked to this persisten volume by setting up a Persistent Volume Claim (PVC) that defines the parameters requested for the requested volume.
+A pod can be linked to this persistent volume by setting up a Persistent Volume Claim (PVC) that defines the parameters requested for the requested volume.
 
 The cluster will then attach a volume that fits all the parameters.
 

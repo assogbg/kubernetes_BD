@@ -1,8 +1,35 @@
 # Deployments
 
+## Questions
+
+-
+-
+-
+-
+-
+-
+-
+
+## Contents
+* [Description](#Description)
+  * [Yaml details](#yaml-details)
+* [Lifecycle](#lifecycle)
+  * [Pods](#pods)
+  * [Container](#container)
+  * [Hands on session on Pod vs Containers Lifecycle](#hands-on-session-on-pod-vs-containers-lifecycle)
+* [Workload resource controllers](#workload-resource-controllers)
+  * [Pods overview](#pods)
+  * [Added Values of Controllers](#added-values-of-controllers)
+* [Networking](#Networking)
+  * [overview](#overview)
+  * [services](#services)
+  * [Kube Proxy](#kube-proxy)
+  * [Kube DNS](#kube-dns)
+* [Namespaces](#namespaces)
+
 ## Introduction - Workload resource controllers
 
-[As we mentionned](../PODS/pods.md), Pods are
+[As we mentionned](../1-PODS/pods.md), Pods are
 - *ephemeral* in nature
 - and they *do not have the capability to self-heal* by themselves.
 

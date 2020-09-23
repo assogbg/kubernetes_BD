@@ -1,5 +1,8 @@
 FROM node:latest
 
+RUN apt-get update
+RUN apt-get install curl telnet nano -y
+
 # Create app directory
 WORKDIR /usr/src/app
 

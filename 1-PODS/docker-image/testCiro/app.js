@@ -20,10 +20,5 @@ console.log(`Running on http://${HOST}:${PORT}`);
 
 app.get('/', function(req, res) {
 
-    res.send('This is the GREAT ciro di marzo API v4')
+    res.send('This is the POD section exercices Hello world ')
 });
-
-app.get('/getImmortale', function(req, res) {
-  var clan=req.query.clan;
-  res.send('sempre per noi ciro - clan '+clan)
-})

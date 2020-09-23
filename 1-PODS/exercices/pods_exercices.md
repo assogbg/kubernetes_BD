@@ -32,7 +32,7 @@ sempre per noi ciro - clan savas%
 
 ### create 2 pods based on the third image
 > kubectl run --dry-run --restart=Never -o yaml savastano --image=pgolard/test-savastano:v3 --port=9999 > savastanopod.yaml
-> kubectl run --dry-run --restart=Never -o yaml ciro --image=pgolard/test-ciro:v3 --port=7777 > ciropod.yaml
+> kubectl run --dry-run=client --restart=Never -o yaml ciro --image=pgolard/test-ciro:v3 --port=7777 > ciropod.yaml
 
 ### retrieve their ip adresses
 > kubectl get pods -o wide

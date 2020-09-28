@@ -3,24 +3,24 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: webapp
-  name: webapp
+    app: deploysecond
+  name: deploysecond
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: webapp
+      app: deploysecond
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: webapp
+        app: deploysecond
     spec:
       containers:
-      - image: nginx:1.17.1
-        name: nginx
-        resources: {}
+      - image: assogbg/pod_second:v1
+        name: second
         ports:
-        - containerPort: 80
+        - containerPort: 7777
+        resources: {}
 status: {}

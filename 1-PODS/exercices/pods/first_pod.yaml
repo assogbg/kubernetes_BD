@@ -3,14 +3,14 @@ kind: Pod
 metadata:
   creationTimestamp: null
   labels:
-    run: ciro
-  name: ciro
+    run: firstpod
+  name: firstpod
 spec:
   containers:
-  - image: pgolard/test-ciro:v3
-    name: ciro
+  - image: assogbg/pod_first:v1
+    name: firstpod
     ports:
-    - containerPort: 7777
+    - containerPort: 9999
     resources: {}
   dnsPolicy: ClusterFirst
   restartPolicy: Never

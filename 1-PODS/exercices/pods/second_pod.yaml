@@ -3,12 +3,12 @@ kind: Pod
 metadata:
   creationTimestamp: null
   labels:
-    run: ciro
-  name: ciro
+    run: secondpod
+  name: secondpod
 spec:
   containers:
-  - image: assogbg/pods_exo:v1
-    name: ciro
+  - image: assogbg/pod_second:v1
+    name: secondpod
     ports:
     - containerPort: 7777
     resources: {}

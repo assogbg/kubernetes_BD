@@ -1,32 +1,5 @@
 # Deployments
 
-## Questions
-
--
--
--
--
--
--
--
-
-## Contents
-* [Description](#Description)
-  * [Yaml details](#yaml-details)
-* [Lifecycle](#lifecycle)
-  * [Pods](#pods)
-  * [Container](#container)
-  * [Hands on session on Pod vs Containers Lifecycle](#hands-on-session-on-pod-vs-containers-lifecycle)
-* [Workload resource controllers](#workload-resource-controllers)
-  * [Pods overview](#pods)
-  * [Added Values of Controllers](#added-values-of-controllers)
-* [Networking](#Networking)
-  * [overview](#overview)
-  * [services](#services)
-  * [Kube Proxy](#kube-proxy)
-  * [Kube DNS](#kube-dns)
-* [Namespaces](#namespaces)
-
 ## Introduction - Workload resource controllers
 
 [As we mentionned](../1-PODS/pods.md), Pods are
@@ -42,7 +15,7 @@ That is the reason **they are used with controllers** which handle Pods'
 
 **Controllers for workload resources create Pods** from a **pod template** and manage those Pods on your behalf.
 
-**PodTemplates are specifications for creating Pods**, and are included in **workload resources such as Deployments, Jobs, and DaemonSets**.
+**PodTemplates are specifications for creating Pods**, and are included in **Kubernetes workload resources** such as Deployments, Jobs, and DaemonSets.
 
 Each controller for a workload resource uses the PodTemplate inside the workload object to make actual Pods.
 The **PodTemplate is part of the desired state of whatever workload resource you used to run your app**.
@@ -100,11 +73,13 @@ The Replicaset Workload Resource address some of the issues of dealing with "bar
 The ***replicaset controller*** makes sure that the ***desired state*** (number of replicas) ***matches the current state***.
 
 Imagine the following situation:
-![](res0.png)
+![](pics/res0.png)
 
 Now, if pod n° 3 crashes => desired state != current state
+
 Therefore the RS controller creates a new pod
-![](res1.png)
+
+![](pics/res1.png)
 
 
 #### ***Yaml Overview***
@@ -523,21 +498,21 @@ A key feature of kubernetes deployments is the management of
 
 In such a way that there will not be any downtime for your micro service.
 Let's take an example : imagine a deployment nginx, with 2 replicas based on image ngnix 1.0.0
-![](rolling_0.png)
+![](pics/rolling_0.png)
 
 Now let's say we want to upgrade to ngnix 2.0.0
 Basically the deployment controller will trigger the creation of a new replicaset.
-![](rolling_1.png)
+![](pics/rolling_1.png)
 
 Pods from initial resplicaset won't be terminated before pods from the new replicaset are up and running.
-![](rolling_2.png)
+![](pics/rolling_2.png)
 
 They won't terminate old pods before new pods from the new RS are rolled out.
-![](rolling_3.png)
+![](pics/rolling_3.png)
 
 As a result, there won't be any downtime. As we can see in the last image, RS 1 is removed only when curret state == desired state with 2nd RS.
 
-![](rolling_4.png)
+![](pics/rolling_4.png)
 
 ***Rollout***
 
@@ -890,7 +865,7 @@ spec:
 
 ### Pure Command line
 ATTENTION this method is deprecated
-> kubectl run --dry-run -o yaml savastano --image=pgolard/test-savastano:v3 --labels=app=savastano --replicas=2 --port=9999
+> kubectl run --dry-run=client -o yaml savastano --image=pgolard/test-savastano:v3 --labels=app=savastano --replicas=2 --port=9999
 
 
 ```
@@ -923,7 +898,7 @@ spec:
 
 ### Mix Command line & Yaml
 
-> kubectl create deployment --dry-run -o yaml savastano --image=pgolard/test-savastano:v3
+> kubectl create deployment --dry-run=client -o yaml savastano --image=pgolard/test-savastano:v3
 
 ```
 apiVersion: apps/v1
@@ -954,3 +929,10 @@ spec:
 Then update some fields like number of replicas...
 
 `kubectl get pods -l env=prod --show-labels`
+
+
+## Deployment Event Chain
+
+You find below a summary of what happens when you ask the API server to create a deployment using your ***kubectl*** command:
+
+![](pics/deploy_event_chain.png)

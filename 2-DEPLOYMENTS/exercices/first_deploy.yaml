@@ -3,22 +3,24 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    tier: backend
-  name: deploy
+    app: deployfirst
+  name: deployfirst
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: v1
+      app: deployfirst
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: v1
+        app: deployfirst
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - image: assogbg/pod_first:v1
+        name: first
+        ports:
+        - containerPort: 9999
         resources: {}
 status: {}

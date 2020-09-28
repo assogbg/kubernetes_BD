@@ -21,3 +21,9 @@ console.log(`Running on http://${HOST}:${PORT}`);
 app.get('/world', function(req, res) {
     res.send('This is the PODS exercices section hello world from savastano')
 });
+
+//This route has been added in the docker image assogbg/pod_first:v2 but is not present in the v1 
+app.get('/world/v2', function(req, res) {
+
+    res.send('This is the hello world V2 for deployments')
+});

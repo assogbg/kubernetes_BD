@@ -22,3 +22,9 @@ app.get('/hello', function(req, res) {
 
     res.send('This is the POD section exercices Hello world from ciro')
 });
+
+//This route has been added in the docker image assogbg/pod_second:v2 but is not present in the v1 
+app.get('/hello/v2', function(req, res) {
+
+    res.send('This is the hello world V2 for deployments')
+});

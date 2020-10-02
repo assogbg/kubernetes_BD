@@ -28,10 +28,9 @@ Here the different parts of this training:
 5. **[SERVICES](3-SERVICES/services.md)**
 6. **[VOLUMES](4-VOLUMES/volumes.md)**
 7. **[INGRESS](5-INGRESS/ingress.md)**
-8. **[CONFIGMAPS](6-CONFIGMAPS/configmaps.md)**
-9. **[SECRETS](7-SECRETS/secrets.md)**
-10. **[MULTICONTAINERS](8-MULTICONTAINERS/multicontainers.md)**
-11. **[HANDS-ON USE CASE](USE_CASES/usecases.md)**
+8. **[CONFIGMAPS AND CONFIGMAPS](6-CONFIGMAPS_SECRETS/secrets.md)**
+9. **[MULTICONTAINERS](8-MULTICONTAINERS/multicontainers.md)**
+10. **[HANDS-ON USE CASE](USE_CASES/usecases.md)**
 
 Therefore, you will need to install locally kubernetes or use a cloud provider.
 We will use minikube for all the exercices, please follow this installation tutorial: https://kubernetes.io/docs/tasks/tools/install-minikube/

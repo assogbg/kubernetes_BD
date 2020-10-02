@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mc-mornaft-dep
+  name: mc-mornaft-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mc-mornaft-pods
+  template:
+    metadata:
+      labels:
+        app: mc-mornaft-pods
+    spec:
+      containers:
+      - image: pgolard/multcont-morning:v3
+        name: multcont-morning
+        ports:
+        - containerPort: 1234
+      - image: pgolard/multcont-afternoon:v3
+        name: multcont-afternoon
+        ports:
+        - containerPort: 4321

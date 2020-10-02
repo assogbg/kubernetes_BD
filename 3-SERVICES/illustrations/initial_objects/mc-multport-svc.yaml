@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mc-mornaft-dep
+  name: mc-mornaft-svc
+spec:
+  ports:
+  - name: morning
+    port: 1234
+    protocol: TCP
+    targetPort: 1234
+  - name: afternoon
+    port: 4321
+    protocol: TCP
+    targetPort: 4321
+  selector:
+    app: mc-mornaft-pods
+  type: ClusterIP

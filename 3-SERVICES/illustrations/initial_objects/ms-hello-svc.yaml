@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ms-hello-dep
+  name: ms-hello-svc
+spec:
+  ports:
+  - port: 17
+    protocol: TCP
+    targetPort: 7777
+  selector:
+    app: ms-hello-pods
+  type: ClusterIP

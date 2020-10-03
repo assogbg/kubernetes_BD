@@ -1,7 +1,7 @@
 # Core Kubernetes Use Case  
 
 Now that most of the basic topics have been covered in the previous session, we believed that the best way of learning a software is by self-implementing a  **real client used cases**. For doing so, we will use a production use-case from Carrefour Belgium.
-One of the key business operation made by carrefour is sending products promotions to their clients. Those promotions are funded by the products providers and represent a huge amount of money.It is then crucial for Carrefour to be able to best segmented the clients based on their consumers profile, that they called a pre-analysis ; but also be able to evaluate the success of their promotions, they called it a post-analysis.
+One of the key business operation is sending products promotions to their clients. Those promotions are funded by the products providers and represent a huge amount of money.It is then crucial for Carrefour to be able to best segmented the clients based on their consumers profile, that they called a pre-analysis ; but also be able to evaluate the success of their promotions, they called it a post-analysis.
 
 #### We have a bit of context about Carrefour, but why is Kubernetes useful ?
 

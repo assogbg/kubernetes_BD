@@ -33,6 +33,6 @@ We advice having follow all the previous parts and deeply understand the concept
 
   - Ensure high-availability of our applications
   - Give access to the microservices from outside our K8s Cluster
-  - A mongoDB database for storing the results with a persistentVolume in ''/data/crf'
+  - A mongoDB database for storing the results with a persistentVolume in '/data/crf'
   - One application with the two microservices /GetPromotions and /SetPromotions
   - A second application for storing logging that will be called from the first application to store details about the request (time, requestName, operation)

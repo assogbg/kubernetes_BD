@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: fan-out-ingress-clusterip
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: \"false\"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /donciro(/|$)(.*)
+        backend:
+          serviceName: web-service-ciro
+          servicePort: 7777
+      - path: /donpietro(/|$)(.*)
+        backend:
+          serviceName: web-service-savastano
+          servicePort: 9999

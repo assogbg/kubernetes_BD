@@ -1,0 +1,20 @@
+version: '3.6'
+services:
+  testCiro:
+    build: ./testCiro
+    image: test-ciro
+    container_name: test-ciro
+    ports:
+            - "7777:7777"
+  testSavastano:
+    build: ./testSavastano
+    image: test-savastano
+    container_name: test-savastano
+    ports:
+            - "9999:9999"
+  testAuth:
+    build: ./testAuth
+    image: test-auth
+    container_name: test-auth
+    ports:
+            - "2222:2222"

@@ -97,17 +97,17 @@ containers:
   create your pod:
   > kubectl create -f pod_0.yaml
 
-  ![](./vol_images/empty_dir_0.png)
+  ![](./pics/empty_dir_0.png)
 
   check if your pods has successfully been deployed:
   > kubectl get pods
 
-  ![](./vol_images/empty_dir_1.png)
+  ![](./pics/empty_dir_1.png)
 
   As we can see, an error occured while creating our pod. Let's check our logs to figure out what happened:
   > kubectl logs pods empty-dir-pod
 
-  ![](./vol_images/empty_dir_2.png)
+  ![](./pics/empty_dir_2.png)
 
   The directory *'/toto'* does not exist. let's create an emptyDir that point to *'toto'*.
 
@@ -142,7 +142,7 @@ containers:
 
   As seen on the Pod section, by default the restartPolicy of a POd is set to always. Therefore, this pod will indefinitely recreate the container. Consequently, he will write to the file titi inside our emptyDir. Let's check our file titi after some recreation of our Pod.
 
-  ![](./vol_images/empty_dir_3.png)
+  ![](./pics/empty_dir_3.png)
 
   We can see that our pod has restarted 6 times and it's the seventh creation. By checking the logs, we see that *"how many do you see"* is written 7 times !
 
@@ -389,7 +389,7 @@ https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#persistentv
   Therefore a pvc that requires few storage could be bounded to a huge pv if it's the only one available. It is therefore important that the k8s cluster administrators provide different type of volumes.
   >kubectl get pv,pvc
 
-  ![](../vol_images/hostname_0.png)
+  ![](../pics/hostname_0.png)
 
   #### 3- POD creation
 

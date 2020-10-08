@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: fan-out-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://demo-auth-service.default.svc.cluster.local/authParam/urlauth/urlpw
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: gomorra.com
+    http:
+      paths:
+      - path: /donciro(/|$)(.*)
+        backend:
+          serviceName: ciro-svc-clusterip
+          servicePort: 7777
+      - path: /donpietro(/|$)(.*)
+        backend:
+          serviceName: savastano-svc-clusterip
+          servicePort: 9999

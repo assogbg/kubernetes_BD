@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: salute-fan-out
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: salute.com
+    http:
+      paths:
+      - path: /hello(/|$)(.*)
+        backend:
+          serviceName: np-hello-svc
+          servicePort: 17
+      - path: /bye(/|$)(.*)
+        backend:
+          serviceName: np-bye-svc
+          servicePort: 19

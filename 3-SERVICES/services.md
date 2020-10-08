@@ -551,14 +551,10 @@ To illustrate that, let's get back to our current dummy application. We do a nsl
 
 ```
 kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
-
-
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
-
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
-
 ```
 
 
@@ -621,12 +617,12 @@ If you take a close look at the environment variables that we printed above, you
 This is due to the fact we created our services AFTER our replica set.
 
 Let's force a re-creation of our replicasets by scaling down then up our deployment.
+
 ```
 kubectl scale deployment ms-bye-dep --replicas=0
 kubectl scale deployment ms-bye-dep --replicas=2
 kubectl scale deployment ms-hello-dep --replicas=0
 kubectl scale deployment ms-hello-dep --replicas=2
-
 ```
 
 And let's now examine our pods, services and end points:

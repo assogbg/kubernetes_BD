@@ -372,7 +372,6 @@ On the right pane, we see the results of a "watch" command on the two pods that 
 
 
 > watch kubectl logs ms-hello-dep-c4954867b-l6wgt
-
 > watch kubectl logs ms-hello-dep-c4954867b-zbfm6
 
 
@@ -394,24 +393,21 @@ ms-hello-svc.default.svc.cluster.local [10.96.126.57] 17 (qotd) open
 ```
 
 - <u>nslookup</u>: resolve dns entries
-j
+
+
+> kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
 ```
-kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
-
-
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
-
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
-
 ```
+
 - <u>ping</u>: while *telnet* and *netcat* ran successfully on the service ip adress and service port, ping is not working using the service static ip adress. On the other hand, we see that we can ping the pod ip adress :
 
-```
-kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 10.96.126.57
-^C
-```
+> kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 10.96.126.57
+
+does not work, while pinging pod ip does:
 
 ```
 kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 172.17.0.10
@@ -425,6 +421,7 @@ PING 172.17.0.10 (172.17.0.10) 56(84) bytes of data.
 64 bytes from 172.17.0.10: icmp_seq=7 ttl=64 time=0.162 ms
 64 bytes from 172.17.0.10: icmp_seq=8 ttl=64 time=0.096 ms
 ```
+
 That’s because the service’s cluster IP is a virtual IP, and only has meaning when combined with the service port.
 
 
@@ -473,20 +470,15 @@ Instead, the **selector** is **used** to **build** a **list of IPs and ports**, 
 
 As an illustration, let's get back to our dummy applications and have a look at the *ms-hello* svc, pods and end points:
 
+> kubectl get svc,ep,po -o wide --show-labels -l 'app in (ms-hello-dep, ms-hello-pods)'
 ```
-kubectl get svc,ep,po -o wide --show-labels -l 'app in (ms-hello-dep, ms-hello-pods)'
-
-
 NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE     SELECTOR            LABELS
 service/ms-hello-svc   ClusterIP   10.96.126.57   <none>        17/TCP    5h30m   app=ms-hello-pods   app=ms-hello-dep
-
 NAME                     ENDPOINTS                           AGE     LABELS
 endpoints/ms-hello-svc   172.17.0.10:7777,172.17.0.11:7777   5h30m   app=ms-hello-dep
-
 NAME                               READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES   LABELS
 pod/ms-hello-dep-c4954867b-d798w   1/1     Running   0          58m   172.17.0.11   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=c4954867b
 pod/ms-hello-dep-c4954867b-f494q   1/1     Running   0          58m   172.17.0.10   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=c4954867b
-
 ```
 
 If we run a `kubeclt describe svc ms-hello-svc`  we see the following elements, notably the Endpoints of this service :

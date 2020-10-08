@@ -415,7 +415,7 @@ https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions
 Check the ssl stuff
 Here we see that we do not provide host name with that ingress :
 
-```
+```yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -440,7 +440,7 @@ spec:
 
 ## Ingess single svc
 
-```
+```yml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:

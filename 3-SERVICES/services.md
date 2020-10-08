@@ -1,6 +1,5 @@
 # Services
 
-
 In this section we're going to talk about **services**.
 Services are an essential component of Kubernetes, basically used to ***expose pods*** (directly or through deployments/replicasets) by providing a ***Static Virtual IP***.
 

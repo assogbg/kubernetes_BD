@@ -110,7 +110,7 @@ The following commands will
 - delete within default namespace all deployments, pods, replica sets.
 - delete all services apart from default namespace
 
-```yaml
+```bash
 kubectl delete deploy,rs,po --all -n default
 kubectl delete svc --field-selector metadata.name!=kubernetes -n default
 ```

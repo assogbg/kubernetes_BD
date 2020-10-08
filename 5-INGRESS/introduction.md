@@ -107,22 +107,18 @@ As a result, we end up with following objects created in our k8s cluster within 
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                SELECTOR            LABELS
 deployment.apps/ms-bye-dep     2/2     2            2           3m6s    ms-bye       pgolard/ms-bye:v5     app=ms-bye-pods     app=ms-bye-dep
 deployment.apps/ms-hello-dep   2/2     2            2           2m57s   ms-hello     pgolard/ms-hello:v5   app=ms-hello-pods   app=ms-hello-dep
-
 NAME                                      DESIRED   CURRENT   READY   AGE     CONTAINERS   IMAGES                SELECTOR                                         LABELS
 replicaset.apps/ms-bye-dep-5c6ff967       2         2         2       3m6s    ms-bye       pgolard/ms-bye:v5     app=ms-bye-pods,pod-template-hash=5c6ff967       app=ms-bye-pods,pod-template-hash=5c6ff967
 replicaset.apps/ms-hello-dep-7fdf6cb86c   2         2         2       2m57s   ms-hello     pgolard/ms-hello:v5   app=ms-hello-pods,pod-template-hash=7fdf6cb86c   app=ms-hello-pods,pod-template-hash=7fdf6cb86c
-
 NAME                                READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES   LABELS
 pod/ms-bye-dep-5c6ff967-9qpn8       1/1     Running   0          3m5s    172.17.0.3   minikube   <none>           <none>            app=ms-bye-pods,pod-template-hash=5c6ff967
 pod/ms-bye-dep-5c6ff967-d4hmb       1/1     Running   0          3m6s    172.17.0.2   minikube   <none>           <none>            app=ms-bye-pods,pod-template-hash=5c6ff967
 pod/ms-hello-dep-7fdf6cb86c-jvh7w   1/1     Running   0          2m57s   172.17.0.5   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=7fdf6cb86c
 pod/ms-hello-dep-7fdf6cb86c-ztv4c   1/1     Running   0          2m57s   172.17.0.4   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=7fdf6cb86c
-
 NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE     SELECTOR            LABELS
 service/kubernetes     ClusterIP   10.96.0.1      <none>        443/TCP        122d    <none>              component=apiserver,provider=kubernetes
 service/np-bye-svc     NodePort    10.96.47.122   <none>        19:32000/TCP   2m52s   app=ms-bye-pods     app=ms-bye-dep
 service/np-hello-svc   NodePort    10.96.41.73    <none>        17:31000/TCP   2m46s   app=ms-hello-pods   app=ms-hello-dep
-
 NAME                     ENDPOINTS                         AGE     LABELS
 endpoints/kubernetes     192.168.64.7:8443                 122d    <none>
 endpoints/np-bye-svc     172.17.0.2:9999,172.17.0.3:9999   2m52s   app=ms-bye-dep

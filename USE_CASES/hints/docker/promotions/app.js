@@ -1,6 +1,7 @@
 'use strict';
 var bodyParser = require('body-parser');
 var express = require('express');
+var request = require('request');
 var dateFormat = require('dateformat');
 var moment = require('moment-timezone');
 moment.tz.setDefault('Europe/Brussels');
@@ -54,7 +55,33 @@ var getPromotions = function(req,res) {
         res.status(500).send({"errors":[err.message]});
     }
 
-    res.send(promos)
+    var logs = {
+      "requestId": req.body.requestId,
+      "api": "/getPromotions",
+      "value": req.body.userIds
+    }
 
+    saveLogs(promos, logs, function(err){
+      res.send(promos)
+    });
   })
 };
+
+
+var saveLogs = function(data,log, callback){
+
+  var headers={
+    "Cache-Control": "no-cache",
+    "Content-Type": "application/json"
+  }
+  var options = {
+    url: 'http://promo-logging:8000/logging',
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(log)
+  }
+
+  request(options,function(err, response, body){
+    callback(err);
+  });
+}

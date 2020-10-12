@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
-mongoose.connect('mongodb://'+process.env.MONGO_LBI_SERVICE_HOST+':27017/promo', { useNewUrlParser: true , server: { reconnectTries: Number.MAX_VALUE }  })
+mongoose.connect('mongodb://'+process.env.MONGO_USERNAME+':'+process.env.MONGO_PASSWORD + '@' +process.env.MONGO_HOST+':27017/promo?authSource=admin', { useNewUrlParser: true , server: { reconnectTries: Number.MAX_VALUE }  })
     .then(() => console.log('connection successful'))
 .catch((err) => console.error(err));
 
@@ -25,7 +25,7 @@ mongoose.UserPromotionSchema = new mongoose.Schema({
     "userId": Number,
     "promotionId": String,
     "used": Boolean,
-    "sys_insertDateTime": String,
+    "sys_insertDateTime": String
 }, {collection: 'promoAdobe'});
 
 
@@ -37,7 +37,7 @@ mongoose.UserPromotionModel = mongoose.model('promoAdobe', mongoose.UserPromotio
 
 module.exports = mongoose;
 
-// dummy records to populate mongo collection 
+// dummy records to populate mongo collection
 mongoose.UserPromotionModel.insertMany([
 	{
 		"requestId": "MZT95",

@@ -1,20 +1,20 @@
 
 
 ## Contents
-* [Annotations](#Annotations)
-    * [Use cases](#Use-cases)
-    * [Commands](#Commands)
-* [Labels](#Labels)
-  * [Definition](#Definition)
-  * [Selectors](#Selectors)
-    * [Equality based selectors](#Equality-based-selectors)
-    * [Set based selectors](#Set-based-selectors)
-  * [Node Labels](#Node-Labels)
-    * [Add labels to a node](#Add labels to a node)
-    * [NodeSelector](#NodeSelector)
-  * [Commands](#Commands)
-  * [Filter on labels](#Filter-on-labels)
-  * [Illustrations](#Illustrations)
+* [Annotations](#annotations)
+    * [Use cases](#use-cases)
+    * [Commands](#commands)
+* [Labels](#labels)
+  * [Definition](#definition)
+  * [Selectors](#selectors)
+    * [Equality based selectors](#equality-based-selectors)
+    * [Set based selectors](#set-based-selectors)
+  * [Node Labels](#node-Labels)
+    * [Add labels to a node](#add labels to a node)
+    * [NodeSelector](#nodeselector)
+  * [Commands](#commands)
+  * [Filter on labels](#filter-on-labels)
+  * [Illustrations](#illustrations)
 
 # Annotations
 

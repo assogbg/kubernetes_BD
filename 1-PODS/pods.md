@@ -8,7 +8,7 @@
   * [Containers states](#container-states)
   * [Hands on session on Pod vs Containers Lifecycle](#hands-on-session-on-pod-vs-containers-lifecycle)
 * [Resources CPU Memory](#resources-cpu-memory)
-  * [Memory Request vs Limits](#memory-request-vs-Limits)
+  * [Memory Request vs Limits](#memory-request-vs-limits)
   * [Resource quota - namespace level](#resource-quota-namespace-level)
   * [LimitRange - namespace level](#limitRange-namespace level)
 * [Pods Commands](#pods-commands)

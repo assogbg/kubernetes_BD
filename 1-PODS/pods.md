@@ -1,31 +1,21 @@
 # Pods
 
-## Questions
-
-- How do
--
--
--
--
--
--
-
 ## Contents
 * [Description](#Description)
   * [Yaml details](#yaml-details)
 * [Lifecycle](#lifecycle)
-  * [Pods](#pods)
-  * [Container](#container)
+  * [Pods states](#pods-state)
+  * [Containers states](#container-states)
   * [Hands on session on Pod vs Containers Lifecycle](#hands-on-session-on-pod-vs-containers-lifecycle)
-* [Workload resource controllers](#workload-resource-controllers)
-  * [Pods overview](#pods)
-  * [Added Values of Controllers](#added-values-of-controllers)
-* [Networking](#Networking)
-  * [overview](#overview)
-  * [services](#services)
-  * [Kube Proxy](#kube-proxy)
-  * [Kube DNS](#kube-dns)
-* [Namespaces](#namespaces)
+* [Resources CPU Memory](#Resources-CPU-Memory)
+  * [Memory Request vs Limits](#Memory-Request-vs-Limits)
+  * [Resource quota - namespace level](#Resource-quota---namespace-level)
+  * [LimitRange - namespace level](#LimitRange---namespace level)
+* [Pods Commands](#Pods-commands)
+* [Specific pods](#Specific-pods)
+  * [Multicontainers Pod](#Multicontainers-Pod)
+  * [Temporary pods](#Temporary-pods)
+* [HANDS_ON](#HANDS_ON)
 
 ## Description
 A Pod is the smallest and simplest Kubernetes object.
@@ -120,7 +110,7 @@ To check the state of a pod, use:
 
 > kubectl describe pod <pod name>
 
-#### ***Container States***
+#### ***Container states***
 
 Once **Pod** is **assigned to a node** by **scheduler**, **kubelet starts creating containers** using container runtime.
 
@@ -148,7 +138,7 @@ Those restart Policies can be :
 - Always
 - OnFailure
 
-### Hands on session on Pod vs Containers Lifecycle
+#### Hands on session on Pod vs Containers Lifecycle
 
 Especially with these container restart policies, it is possible to have misalignment between
 - Pod Status & Lifecycle
@@ -563,7 +553,7 @@ By default, a Pod might have a longer lifetime than its underlying containers, w
 </details>
 
 
-### Resources CPU Memory
+## Resources CPU Memory
 
 Memory Limit and request can be done
 - by containers
@@ -604,7 +594,7 @@ But a Container is **not allowed to use more than its memory limit**.
 If a Container allocates **more memory than its limit** :arrow_right: becomes a candidate for **termination**.
 If the Container continues to consume memory beyond its limit, the Container is terminated. If a terminated Container can be restarted, the kubelet restarts it, as with any other type of runtime failure.
 
-### Resource quota - namespace level
+#### Resource quota - namespace level
 
 ```
 apiVersion: v1
@@ -651,7 +641,7 @@ Now whenever a Container is created in the constraints-mem-example namespace, Ku
 
 - Verify that the Container has a memory limit that is less than or equal to 1 GiB.
 
-### Pods Commands
+## Pods commands
 
 #### *Advanced description*
 
@@ -674,7 +664,7 @@ nginx-prod2     <none>                   nginx      Running      map[running:map
 
  > kubectl get pods --field-selector=status.phase!=Running --all-namespaces
 
-#### *get events*
+#### *Get events*
 
 > kubectl get events --sort-by=.metadata.creationTimestamp
 
@@ -704,7 +694,9 @@ Multi container pod:
  :warning: If you wanna see logs of a **previous terminated container** within a pod:
 > kubectl logs busybox -c busybox2 --previous
 
-### Multicontainers Pod
+## Specific pods
+
+#### Multicontainers Pod
 With Microservices, as we aim at decoupling applications components, the regular use case is to have 1 container per pod.
 
 Nevertheless, there are some use cases (Adapter, side-car, ambassador) where a pod is made up of multiple containers (in this case containers are tightly coupled).
@@ -714,12 +706,9 @@ In that case, this collection of containers
 -	Share the same network namespace - can communicate through localhost
 -	Have access to mount the same external storage (volumes)
 
-**[DETAILED SECTION ON MULTICONTAINERPOD](multicont/multicontainerpod.md)**
-
-### Temporary pods
+#### Temporary pods
 
 `kubectl run pod2 -it -n k8s-challenge-2-b --image=cosmintitei/bash-curl --restart=Never --rm`
-
 
 > kubectl run my-shell --rm -i --tty --image ubuntu -- bash
 
@@ -730,11 +719,6 @@ You may, of course, use a different image or shell. Some of the arguments explai
 - **-i/--tty**: The combination of these two are what allows us to attach to an interactive session.
 - **--**: **Delimits the end of the kubectl run options from the positional arg (bash)**. Indicate the beginning of the container commands.
 - **bash**: Overrides the container's CMD. In this case, we want to launch bash as our container's command.
-
-https://gc-taylor.com/blog/2016/10/31/fire-up-an-interactive-bash-pod-within-a-kubernetes-cluster
-
-## advanced query on pods :
-https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb
 
 ## HANDS_ON
 

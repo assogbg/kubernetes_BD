@@ -354,7 +354,7 @@ https://codeburst.io/kubernetes-ckad-hands-on-challenge-13-replicaset-without-do
 
 ## Deployments
 
-#### ***Description***
+#### ***Deployment description***
 
 We've seen that ***RS workload resource*** offers interesting features compared to "bare" pods:
 - ***self healing***

@@ -1,16 +1,33 @@
 
-## Annotations
+
+## Contents
+* [Annotations](#Annotations)
+    * [Use cases](#Use-cases)
+    * [Commands](#Commands)
+* [Labels](#Labels)
+  * [Definition](#Definition)
+  * [Selectors](#Selectors)
+    * [Equality based selectors](#Equality-based-selectors)
+    * [Set based selectors](#Set-based-selectors)
+  * [Node Labels](#Node-Labels)
+    * [Add labels to a node](#Add labels to a node)
+    * [NodeSelector](#NodeSelector)
+  * [Commands](#Commands)
+  * [Filter on labels](#Filter-on-labels)
+  * [Illustrations](#Illustrations)
+
+# Annotations
 
 You can use either labels or annotations to attach metadata to Kubernetes objects.
 We'll define labels in the next section.
 Labels can be used to select objects and to find collections of objects that satisfy certain conditions.
 In contrast, **annotations are not used to identify and select objects**. The **metadata** in an annotation can be small or large, structured or unstructured, and can include characters not permitted by labels.
 
-### Use cases
+#### Use cases
 - Build, release, or image information like timestamps, release IDs, git branch, PR numbers, image hashes, and registry address
 - Client library or tool information that can be used for debugging purposes: for example, name, version, and build information
 
-### Commands
+#### Commands
 
 ```
 apiVersion: v1
@@ -38,9 +55,9 @@ Remove the annotations on the pods and verify
 > kubectl annotate pod nginx-prod name-
 
 
-## Labels
+# Labels
 
-### Definition
+## Definition
 
 Labels are **key/value pairs** that are attached to objects.
 The main reason for Creating Labels is like an **identifier.**
@@ -77,7 +94,7 @@ Here in the above example we find
 - Labels specified in `spec: selector: matchLabels` :arrow_right: tells the resource to match the pod according to that label
 - labels defined in the `template` (actually a podTemplate) :arrow_right: label for the pod that the deployment is deploying
 
-### Selectors
+## Selectors
 
 #### *Equality based selectors*
 Matching objects **must satisfy all** of the specified label constraints, though they may have additional labels as well
@@ -87,7 +104,7 @@ This is like an **AND** in sql statement.
 Set-based label requirements allow filtering keys according to a set of values. Three kinds of operators are supported: in,notin and exists (only the key identifier).
 This is like an **OR** in sql statement.
 
-### Node Labels
+## Node Labels
 
 You can **constrain a Pod to only be able to run on particular Node(s), or to prefer to run on particular nodes**.
 There are several ways to do this, and the recommended approaches **all use label selectors to make the selection**.
@@ -129,7 +146,7 @@ spec:
 When you then run kubectl apply -f, the **Pod will get scheduled on the node that you attached the label to**.
 You can verify that it worked by running kubectl get pods -o wide and looking at the “NODE” that the Pod was assigned to.
 
-### Commands
+## Commands
 
 #### *Add - update labels*
 > kubectl label pods foo unhealthy=true
@@ -143,7 +160,7 @@ You can verify that it worked by running kubectl get pods -o wide and looking at
 `kubectl get pods -o=custom-columns='NAME:metadata.name','LABELS:metadata.labels','DATA:spec.containers[*].image'`
 
 
-### Filter on labels
+## Filter on labels
 
 ##### *Filter on label value*
 > kubectl get pods -l newlab=newval,app=hello-world-app -o wide --show-labels
@@ -198,7 +215,9 @@ If you want to apply a command to all pods with name prefix "ngin-dev" and a num
 
 > kubectl label pod nginx-dev{1..3} app=nginx
 
-### ***Illustration 1***
+## Illustrations
+
+#### ***Illustration 1***
 <details>
   <summary>
 
@@ -295,7 +314,7 @@ If you want to apply a command to all pods with name prefix "ngin-dev" and a num
 
 </details>
 
-### ***Illustration 2***
+#### ***Illustration 2***
 <details>
   <summary>
 

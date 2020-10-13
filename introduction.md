@@ -41,7 +41,7 @@ In a true microservices architecture, a team can make changes (within reason) to
 
 #### Containerized Microservices
 
-Virtualisation** and **containerisation** played a major role in this revolution.
+**Virtualisation** and **containerisation** played a major role in this revolution.
 
 Containerized Microservices are **lightweight** applications written in **various** modern **programming languages**, with specific dependencies, libraries and environmental requirements.
 

@@ -44,7 +44,7 @@ spec:
         name: empty-volume
     volumes:
     - name: empty-volume
-            emptyDir: {}
+      emptyDir: {}
 ```
 
 Mounting an emptyDir to two containers inside a pod allows to directly access data from one container to the other. Note that it is not necessary to give the same path on the volumeMounts. If you mount an emptyDir with a non-empty directory inside your pod. it will delete everything. If you need your emptyDir to not be empty, you will need to create the files after the emptyDir creation with a initContainer for example.
@@ -175,7 +175,15 @@ and PVC of your cluster :
 
 *Example of PV*
 ```
-
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-static
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
 ```
 
 *Example of PVC and use it in a pod*
@@ -269,7 +277,7 @@ So for example if a PV can only be access in ReadOnlyMany, he would not be able 
 ### *HostPath*
 
 An existing ressource (commonly the filesystem) of the host node is mounted on the pod. It allows to **persist data**.
-It is particularly important to new this type of volume for the certification.
+It is particularly important to know this type of volume for the certification.
 
 A hostpath can directly be created with a pod **without a PVC** as the following example :
 

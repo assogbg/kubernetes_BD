@@ -33,10 +33,21 @@ Create two pods with the previous commands:
 > kubectl get pods -o wide
 
 ```
-NAME        READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
-secondpod        1/1     Running   0          12s   172.17.0.3   minikube   <none>           <none>
+NAME       READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+secondpod  1/1     Running   0          12s   172.17.0.3   minikube   <none>           <none>
 firstpod   1/1     Running   0          22s   172.17.0.2   minikube   <none>           <none>
 ```
+
+#### try to curl them from the pod Container
+> kubectl exec -it firstpod -- /bin/bash
+
+> curl -X GET "localhost:9999/world"
+
+> kubectl exec -it secondpod -- /bin/bash
+
+> curl -X GET "localhost:7777/hello"
+
+
 #### try to curl them from your local machine
 > curl -X GET http:/172.17.0.3:7777/hello
 
@@ -46,12 +57,15 @@ It doesn't work - their ip is only accessible from within the cluster
 So connect on minikube
 > minikube ssh
 
-> curl -X GET http:/minikubeIP:7777/hello
+> curl -X GET http:/172.17.0.3:7777/hello
 
-> curl -X GET http:/minikubeIP:9999/world
+> curl -X GET http:/172.17.0.2:9999/world
 
 And this works fine.
+
 #### try to curl them from your local machine using the minikube ip
+> minikube ip
+
 > curl -X GET http:/minikubeIP:7777/hello
 
 > curl -X GET http:/minikubeIP:9999/world

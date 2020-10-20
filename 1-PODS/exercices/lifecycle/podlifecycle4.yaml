@@ -9,5 +9,5 @@ spec:
   - name: myapp-container
     image: busybox
     imagePullPolicy: IfNotPresent
-    command: ['sh', '-c', 'echo The Pod is running && sleep 4']
+    command: ['sh', '-c', 'echo The Pod is running && sleep 10']
   restartPolicy: OnFailure

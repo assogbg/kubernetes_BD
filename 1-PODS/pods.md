@@ -153,7 +153,7 @@ By default, a Pod might have a longer lifetime than its underlying containers, w
 
 
     Let's use some examples
-    #### Simple Pod — Sleep 6 Seconds - restartPolicy Never
+    #### Simple Pod — Sleep 10 Seconds - restartPolicy Never
 
     ```
     apiVersion: v1
@@ -166,7 +166,7 @@ By default, a Pod might have a longer lifetime than its underlying containers, w
       containers:
       - name: myapp-container
         image: busybox
-        command: ['sh', '-c', 'echo The Pod is running && sleep 5']
+        command: ['sh', '-c', 'echo The Pod is running && sleep 10']
       restartPolicy: Never
     ```
 

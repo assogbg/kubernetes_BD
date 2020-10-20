@@ -8,5 +8,5 @@ spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['sh', '-c', 'echo The Pod is running && sleep 5']
+    command: ['sh', '-c', 'echo The Pod is running && sleep 10']
   restartPolicy: Never

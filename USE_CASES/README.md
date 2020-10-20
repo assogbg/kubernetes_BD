@@ -30,8 +30,9 @@ We advice having follow all the previous parts and deeply understand the concept
 
 #### Technical needs
 
+  - Having a Dev and Prod separated environment on the same k8s cluster.
   - Ensure high-availability of our applications
-  - Give access to the microservices from outside our K8s Cluster
+  - Give access to the microservices from outside our k8s Cluster
   - A mongoDB database for storing the results with a volume in '/data/crf' with a simple root authentication
   - One application with the microservice '/GetPromotions'
   - A second application for storing logging that will be called on '/logging' from the first application to store details about the request (time, requestId, api and parameters)
@@ -98,4 +99,4 @@ You can now try the /getPromotions API
 
 With all the different explanations above and the different sections from this training, create your own K8s set-up.
 Discuss your set-up with peers ? what should be improved for a production environment ? Any remarks ?
-**Please create a git branch ( /handson/<yourUsername> ) with your work and do intermediary commits** so that we can have a follow-up 
+**Please create a git branch ( /handson/<yourUsername> ) with your work and do intermediary commits** so that we can have a follow-up

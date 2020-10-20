@@ -107,3 +107,14 @@ Once your pod has been created, you need to get the status of the pod. Show that
 </details>
 
 Now redo the same steps but with the bash command 'echo The Pod is running && exit 1'. Any differences while checking the status of your pod ?
+
+## Additionnal exercice
+
+- launch a pod using the container image ***quay.io/openshiftlabs/simpleservice:0.5.0*** and exposing a HTTP API on port 9876
+
+- Verify that your Pod is ***Running***
+
+- execute the following command from inside your container and inside your minikube cluster. Find the correct host to use depending on where you curl: ***curl -s <host?>:9876/info***
+
+- Add cpu/memory (here: 64MB of RAM and 0.5 CPUs) requests and Limits for your pod.
+Here some documentations : https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/ & https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

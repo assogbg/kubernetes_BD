@@ -1,6 +1,6 @@
 # Volumes HANDS_ON
 
-### 1- EmptyDir
+## 1- EmptyDir
 
 In the first exercice, we would like to create a pod mounted to an EmptyDir "/toto". We want a container that echo the content of "/toto", wait 10 seconds, echo the duration of the sleep (echo 10) and then create a file "titi.md" inside the toto directory.
 
@@ -18,7 +18,7 @@ bash commands:
 > command: ['sh', '-c', 'cd /toto && echo cd done && ls /toto && echo "how many do you see" >> titi && cat titi && sleep 15']
 
 
-### 2- Persistent Volume
+## 2- Persistent Volume
 
 #### a- PV and PVC discovery
 
@@ -35,4 +35,4 @@ bash commands:
  - Create PersistentVolume named task-pv-volume with storage 10Gi, access modes ReadWriteOnce, storageClassName manual, and volume at /mnt/data and Create a PersistentVolumeClaim of at least 3Gi storage and access mode ReadWriteOnce and verify status is Bound
  - Create an nginx pod with containerPort 80 and with a PersistentVolumeClaim task-pv-claim and has a mouth path "/usr/share/nginx/html"
 
- 
+## Additional exercice

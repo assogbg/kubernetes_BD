@@ -318,3 +318,25 @@ Let's say that we now want to rollback our last upgrade and move back to the fir
     ```
 
 </details>
+
+## Additional exercice
+
+- Create the deployment located in: ***https://raw.githubusercontent.com/openshift-evangelists/kbe/main/specs/deployments/d09.yaml***
+
+- Check your deployment, replicaSet, pods (naming, numbers, status, ...)
+
+- At this point in time the sise containers running in the pods are configured to return the version 0.9. Let’s verify this from within the cluster using curl: ***curl -s "yourHost":9876/info***
+
+- Let’s now see what happens if we change that version to 1.0 in an updated deployment yaml : ***https://raw.githubusercontent.com/openshift-evangelists/kbe/main/specs/deployments/d10.yaml***
+
+- Check your deployment, replicaSet, pods (naming, numbers, status, ...)
+
+- Verify that you get the version 1.0 while curling your pod.
+
+- Check your rollout history
+
+- undo your deployment rollout to the revision 1
+
+- Check your rollout history, deployments, rs and pods
+
+- Which version should you receive while curling your pod ? Try it yourself

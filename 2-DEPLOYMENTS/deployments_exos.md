@@ -14,8 +14,8 @@ Kubernetes provides wonderful CLI commands in order to generate a deployment:
 
 #### create 2 deployments
 Create two deployments with the following parameters:
-- docker image : image assogbg/pod_second:v1, name : deployfirst, number of replicas: 2, exposed port: 9999
-- docker image : assogbg/pod_second:v1, name : deploysecond, number of replicas: 2, exposed port: 7777
+- docker image : image assogbg/pod_second:v1, name : deployfirst, number of replicas: 2, port: 9999
+- docker image : assogbg/pod_second:v1, name : deploysecond, number of replicas: 2, port: 7777
 
 <details>
     <summary>

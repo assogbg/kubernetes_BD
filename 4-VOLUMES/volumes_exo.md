@@ -34,5 +34,3 @@ bash commands:
  - Delete the above pod and create again from the same yaml file and verifies there is no file.txt in the path /data/redis
  - Create PersistentVolume named task-pv-volume with storage 10Gi, access modes ReadWriteOnce, storageClassName manual, and volume at /mnt/data and Create a PersistentVolumeClaim of at least 3Gi storage and access mode ReadWriteOnce and verify status is Bound
  - Create an nginx pod with containerPort 80 and with a PersistentVolumeClaim task-pv-claim and has a mouth path "/usr/share/nginx/html"
-
-## Additional exercice

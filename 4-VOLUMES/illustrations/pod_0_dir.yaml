@@ -9,3 +9,9 @@ spec:
   - name: myapp-container
     image: busybox
     command: ['sh', '-c', 'cd /toto && echo cd done && ls /toto && sleep 2 && echo "how many do you see" >> titi && sleep 1 && cat titi && sleep 15']
+    volumeMounts:
+      - mountPath: /toto
+        name: scratch-volume
+  volumes:
+  - name: scratch-volume
+    emptyDir: {}

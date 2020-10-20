@@ -2,6 +2,7 @@
 
 ### Exercise 1
 Todays Task: Secrets and ConfigMaps
+
 - Create a secret1.yaml. The yaml should create a secret called secret1 and store password:12345678. Create that secret.
 - Create a pod1.yaml which creates a single pod of image bash . This pod should mount the secret1 to /tmp/secret1. This pod should stay idle after boot. Create that pod.
 - Confirm pod1 has access to our password via file system.
@@ -12,6 +13,7 @@ Todays Task: Secrets and ConfigMaps
 
 ### Exercise 2
 Configuring a Pod to Use a ConfigMap
+
 Create a new file named config.txt with the following environment variables as key/value pairs on each line.
 DB_URL equates to localhost:3306
 DB_USERNAME equates to postgres

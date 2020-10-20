@@ -125,7 +125,7 @@ spec:
 
 Now we create our deployments :
 
-```yaml
+```
 kubectl apply -f illustrations/initial_objects/ms-bye-dep.yaml
 kubectl apply -f illustrations/initial_objects/ms-hello-dep.yaml
 ```

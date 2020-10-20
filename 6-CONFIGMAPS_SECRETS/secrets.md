@@ -15,7 +15,7 @@ Secrets are stored in the tmpfs storage of the host node and are only sent to th
 They are different way of creating a secret:
 
 #### *command-line:*
-> kubectl create secret generic mySecretName --from-literal=password=PH
+> kubectl create secret generic mySecretName --from-literal=password=test
 
 ![](./pics/secret_1.png)
 

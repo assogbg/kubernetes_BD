@@ -7,6 +7,10 @@ As a deep and developed k8s training, each section will first present the differ
 ### PREREQUISITES
 
 Some experience with a programming language (python, javascript, bash, ..) will be useful. Yet, we wrote this training while supposing that the attendees don't have any knowledge of kubernetes.
+You will need to install locally kubernetes or use a cloud provider.
+We will use minikube for all the exercices in this training, please follow this installation tutorial: https://kubernetes.io/docs/tasks/tools/install-minikube/
+
+We do recommend to use Linux or Mac for this training and we have not been able to test it on Windows. Sorry for that !
 
 ### Summary
 
@@ -31,11 +35,6 @@ Here the different parts of this training:
 8. **[CONFIGMAPS AND CONFIGMAPS](6-CONFIGMAPS_SECRETS/secrets.md)**
 9. **[MULTICONTAINERS](8-MULTICONTAINERS/multicontainers.md)**
 10. **[HANDS-ON USE CASE](USE_CASES/usecases.md)**
-
-Therefore, you will need to install locally kubernetes or use a cloud provider.
-We will use minikube for all the exercices, please follow this installation tutorial: https://kubernetes.io/docs/tasks/tools/install-minikube/
-
-We do recommend to use Linux or Mac for this training and we have not been able to test it on Windows. Sorry for that !
 
 Once it's done you're ready to rock Kubernetes !
 

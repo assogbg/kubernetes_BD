@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ms-hello-dep
+  name: ms-hello-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-hello-pods
+  template:
+    metadata:
+      labels:
+        app: ms-hello-pods
+    spec:
+      containers:
+        - image: pgolard/ms-hello:v1
+          name: ms-hello
+          ports:
+            - containerPort: 7777

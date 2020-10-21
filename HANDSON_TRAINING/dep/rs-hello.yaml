@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: ms-hello-rs
+  labels:
+    run: training-1-ms-hello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-hello-pods
+  template:
+    metadata:
+      labels:
+        app: ms-hello-pods
+    spec:
+      containers:
+      - name: ms-hello
+        image: pgolard/ms-hello:v1

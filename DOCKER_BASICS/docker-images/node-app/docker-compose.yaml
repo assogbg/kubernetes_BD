@@ -1,0 +1,18 @@
+version: '3.6'
+services:
+  msHello:
+    build: ./msHello
+    image: ms-hello
+    container_name: ms-hello
+    ports:
+            - "7777:7777"
+    environment:
+        - ms-bye-svc=ms-bye
+        - MS_BYE_SVC_SERVICE_HOST=ms-bye
+        - MS_BYE_SVC_SERVICE_PORT=9999
+  msBye:
+    build: ./msBye
+    image: ms-bye
+    container_name: ms-bye
+    ports:
+            - "9999:9999"

@@ -33,7 +33,6 @@ Here the different parts of this training:
 6. **[VOLUMES](4-VOLUMES/volumes.md)**
 7. **[INGRESS](5-INGRESS/ingress.md)**
 8. **[CONFIGMAPS AND CONFIGMAPS](6-CONFIGMAPS_SECRETS/secrets.md)**
-9. **[MULTICONTAINERS](8-MULTICONTAINERS/multicontainers.md)**
 10. **[HANDS-ON USE CASE](USE_CASES/usecases.md)**
 
 Once it's done you're ready to rock Kubernetes !

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ms-bye-dep
+  name: ms-bye-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-bye-pods
+  template:
+    metadata:
+      labels:
+        app: ms-bye-pods
+    spec:
+      containers:
+      - image: pgolard/ms-bye:v1
+        name: ms-bye
+        ports:
+        - containerPort: 9999

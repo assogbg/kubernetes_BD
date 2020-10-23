@@ -26,7 +26,7 @@ This will give you some help you figure out the huge revolution that happened in
 Note that the different sections have been thought, written and optimized to be followed in the sections order.
 Here the different parts of this training:
 
-2. **[DOCKER/NODE.js REMINDER](DOCKER_BASICS/docker-image/reminder.md)**
+2. **[DOCKER/NODE.js REMINDER](DOCKER_BASICS/reminder.md)**
 3. **[PODS](1-PODS/pods.md)**
 4. **[DEPLOYMENTS](2-DEPLOYMENTS/deployments.md)**
 5. **[SERVICES](3-SERVICES/services.md)**

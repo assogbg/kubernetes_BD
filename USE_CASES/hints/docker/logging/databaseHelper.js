@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 console.log('mongodb://'+process.env.MONGO_USERNAME+':'+process.env.MONGO_PASSWORD + '@' +process.env.MONGO_HOST+':27017/promo');
 
-mongoose.connect('mongodb://'+process.env.MONGO_INITDB_ROOT_USERNAME+':'+process.env.MONGO_INITDB_ROOT_PASSWORD + '@' +process.env.MONGO_LBI_SERVICE_HOST+':27017/promo?authSource=admin', { useNewUrlParser: true , server: { reconnectTries: Number.MAX_VALUE }  })
+mongoose.connect('mongodb://'+process.env.MONGO_USERNAME+':'+process.env.MONGO_PASSWORD + '@' +process.env.MONGO_HOST+':27017/promo?authSource=admin', { useNewUrlParser: true , server: { reconnectTries: Number.MAX_VALUE }  })
     .then(() => console.log('connection successful'))
 .catch((err) => console.error(err));
 

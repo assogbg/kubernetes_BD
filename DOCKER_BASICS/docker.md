@@ -39,12 +39,12 @@ Back in the days, the architectural pattern used to be Monolithic. Application c
 - service disruptions when updates/upgrades
 
 
-With containerized applications, first step consists of packaging up 
-- application code 
+With containerized applications, first step consists of packaging up
+- application code
 - along with its runtime dependencies (libraries, configuration assets ..)
 into a single a single asset called container image that you can move between your different environments.
 
-Containerization offers isolation and loose coupling: Only thing ontainers share is 
+Containerization offers isolation and loose coupling: Only thing ontainers share is
 - the host OS kernel
 - Container Engine (runtime abstraction possible to run the container across different versions of Linux kernel)
 
@@ -61,8 +61,8 @@ Containers are lightweight because they don’t need the extra load of a hypervi
 ## Docker Features
 
 
-Docker provides the ability to package and run an application in a loosely ***isolated*** environment called a container. 
-Containers are ***lightweight*** because they don’t need the extra load of a hypervisor, but run directly within the host machine’s kernel. 
+Docker provides the ability to package and run an application in a loosely ***isolated*** environment called a container.
+Containers are ***lightweight*** because they don’t need the extra load of a hypervisor, but run directly within the host machine’s kernel.
 Docker container can be run on any server provided that Docker-daemon enabled, regardless of the underlying operating system (***Portability***).
 
 Thanks to those features, docker becomes
@@ -74,12 +74,12 @@ Thanks to those features, docker becomes
 
 ## Docker architecture
 
-Docker uses a client-server architecture. The Docker client talks to the Docker daemon (server), which does the heavy lifting of 
+Docker uses a client-server architecture. The Docker client talks to the Docker daemon (server), which does the heavy lifting of
 - building
 - running
-- and distributing 
+- and distributing
 
-your Docker containers. 
+your Docker containers.
 
 ![](pic/architecture.svg)
 
@@ -145,7 +145,7 @@ When you run this command, the following happens (assuming you are using the def
 
 One of the most interesting properties of Docker containers is their immutability and the **resulting statelessness** of containers.
 
-As we described in the previous section, a Docker image, once created, does not change. 
+As we described in the previous section, a Docker image, once created, does not change.
 A running container derived from the image has a **writable layer** that can **temporarily store runtime changes**.
 ***If the container is committed prior to deletion*** with docker commit, the changes in the writable layer will be saved into a new image that is distinct from the previous one.
 Why is immutability good? Immutable images and containers lead to an immutable infrastructure, and an **immutable infrastructure** has many interesting benefits that are not achievable with traditional systems. These benefits include the following:
@@ -172,7 +172,7 @@ Personnally it points to my bpersonal docker hub.
 
 ### Build custom base node.js image
 
-We defined a new container image in (**[Dockerfile](docker-images/node-app/svc-section/node-utils/Dockerfile)**) node-utils that consists of nodejs base image enrich with some utilities such as telnet, netcat, ping, nslookup...
+We defined a new container image in (**[Dockerfile](./docker-images/2-DEPLOYMENTS/node-app/svc-section/node-utils/Dockerfile)**) node-utils that consists of nodejs base image enrich with some utilities such as telnet, netcat, ping, nslookup...
 
 Here is the content of the Dockerfile, including pulling node base image + installing 9 packages:
 
@@ -222,8 +222,8 @@ docker push pgolard/node-utils:v1
 
 ### Build images for our 2 dummy Micro services - illustrations
 
-(**[msHello](docker-images/node-app/svc-section/node-app/msHello)**)
-(**[msBye](docker-images/node-app/svc-section/node-app/msBye)**)
+(**[msHello](./docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msHello)**)
+(**[msBye](./docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msBye)**)
 
 Those 2 micro services consists of dockerizzd simple node.js applications.
 We first build and upload them to our docker hub.
@@ -237,5 +237,3 @@ We repeay tyhe operartion 3 times; for every new build, we make a small modif. i
 try to run one of our micro service:
 > docker run -it -p 7777:7777 --name ms-hello pgolard/ms-hello:v3
 > curl 0.0.0.0:7777 - This is the hello world from ms hello - V3%
-
-

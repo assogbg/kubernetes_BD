@@ -23,7 +23,7 @@ Personnally it points to my bpersonal docker hub.
 
 ### Build custom base node.js image
 
-We defined a new container image in (**[Dockerfile](../DOCKER_BASICS/docker-images/node-app/svc-section/node-utils/Dockerfile)**) node-utils that consists of nodejs base image enrich with some utilities such as telnet, netcat, ping, nslookup...
+We defined a new container image in (**[Dockerfile](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-utils/Dockerfile)**) node-utils that consists of nodejs base image enrich with some utilities such as telnet, netcat, ping, nslookup...
 
 Here is the content of the Dockerfile, including pulling node base image + installing 9 packages:
 
@@ -72,8 +72,8 @@ docker push pgolard/node-utils:v1
 
 ### Build images for our 2 dummy Micro services - illustrations
 
-(**[msHello](../DOCKER_BASICS/docker-images/node-app/svc-section/node-app/msHello)**)
-(**[msBye](../DOCKER_BASICS/docker-images/node-app/svc-section/node-app/msBye)**)
+(**[msHello](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msHello)**)
+(**[msBye](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msBye)**)
 
 Those 2 micro services consists of dockerizzd simple node.js applications.
 We first build and upload them to our docker hub.
@@ -196,6 +196,3 @@ We validated the expectation we had with RS. The last key feature we're looking 
 
 
 > kubectl rollout undo deployment ms-bye-dep --to-revision=2
-
-
-## IV. Services

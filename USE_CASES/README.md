@@ -16,7 +16,7 @@ That's how we came up with **a Kubernetes Cluster to deploy our different applic
 
 ### PREREQUISITIES
 
-As the aim is not to develop web services but understand the logic of Kubernetes, we will provide you all of the node.js files. Please refer to the [Docker / Node.js reminder](docker-image/reminder.md) for more information.
+As the aim is not to develop web services but understand the logic of Kubernetes, we will provide you all of the node.js files. Please refer to the [Docker / Node.js reminder](docker-image/reminder.md) and [Docker info](docker-image/docker.md) for more information.
 
 We advice having follow all the previous parts and deeply understand the concepts and illustrations given. This part **will not contain a solution template** like we did for the other parts. The aim is to **let you search, exchange with your colleagues, contact us and go back into the different parts highlighted in this core training**.
 

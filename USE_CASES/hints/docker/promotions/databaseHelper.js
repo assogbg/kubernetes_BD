@@ -38,7 +38,7 @@ mongoose.UserPromotionModel = mongoose.model('promoAdobe', mongoose.UserPromotio
 module.exports = mongoose;
 
 // dummy records to populate mongo collection
-mongoose.UserPromotionModel.insertMany([
+/*mongoose.UserPromotionModel.insertMany([
 	{
 		"requestId": "MZT95",
 		"userId": 1,
@@ -640,4 +640,4 @@ mongoose.UserPromotionModel.insertMany([
 		"used": "false"
 	}
 ]
-)
+)*/

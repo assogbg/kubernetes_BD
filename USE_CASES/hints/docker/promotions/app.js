@@ -27,6 +27,11 @@ console.log(`Running on http://${HOST}:${PORT}`);
 * Route definition
 * */
 
+// Use it to test your service on a browser http://localhost:8080/
+app.get('/', function(req,res){
+  res.send("Hello world");
+});
+
 // Route for retrieving all the promotions not used by a client
 app.post('/getPromotions', function(req, res) {
   getPromotions(req,res);

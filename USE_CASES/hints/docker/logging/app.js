@@ -34,17 +34,17 @@ app.post('/logging', function(req, res) {
 
 //Get unused Promotions for a list of userIds
 var saveLogs = function(req,res) {
-  console.log("AAAAAA")
-  console.log(req.body)
 
   var ts = moment().format("YYYY-MM-DD HH:mm:ss");
 
   var logs = new promoDb.UserLoggingModel({
       "requestId": req.body.requestId,
       "api": req.body.api,
-      "value": req.body.value,
+      "value": req.body.value.toString(),
       "sys_insertDateTime": ts
   });
+    console.log("logs to save")
+    console.log(logs)
 
   logs.save(function(err, doc){
     if(err){

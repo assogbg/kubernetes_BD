@@ -193,7 +193,7 @@ pvc.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: my-first-pvc
+  name: mongo-disk
 spec:
   resources:
     requests:
@@ -210,7 +210,7 @@ containers:
     image: mongo:latest
     volumeMounts:
       - mountPath: "/data/db"
-        name: mongo-data
+        name: my-first-pvc
     ports:
       - containerPort: 27017
   volumes:

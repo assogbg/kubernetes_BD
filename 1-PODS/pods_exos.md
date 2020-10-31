@@ -132,3 +132,8 @@ Now redo the same steps but with the bash command 'echo The Pod is running && ex
 
 - Add cpu/memory (here: 64MB of RAM and 0.5 CPUs) requests and Limits for your pod.
 Here some documentations : https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/ & https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+
+
+## NEXT SESSION
+
+you've completed the exercises, move on to the [deployments](../2-DEPLOYMENTS/deployments.md)

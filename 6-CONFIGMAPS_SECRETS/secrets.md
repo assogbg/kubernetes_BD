@@ -194,3 +194,11 @@ spec:
           name: appconfig
   restartPolicy: Never
 ```
+
+## HANDS_ON
+
+You can now try to do some [exercises](./secrets_exos.md)
+
+## NEXT SESSION
+
+You've completed the first training main session. You can now try to use all the learning to complete the first [USE CASE](../USE_CASES/a-carrefour/README.md)

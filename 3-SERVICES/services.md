@@ -1235,3 +1235,12 @@ spec:
                                  Dload  Upload   Total   Spent    Left  Speed
 100    31  100    31    0     0   1230      0 --:--:-- --:--:-- --:--:--  1291This is the good afternoon root
 ```
+
+
+## HANDS_ON
+
+You can now [follow some illustrations](./illu.md) or directly go to [the exercises](./service_exos.md)
+
+## NEXT SESSION
+
+Then, move on to the [volumes](../4-VOLUMES/volumes.md)

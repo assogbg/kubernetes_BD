@@ -936,3 +936,11 @@ Then update some fields like number of replicas...
 You find below a summary of what happens when you ask the API server to create a deployment using your ***kubectl*** command:
 
 ![](pics/deploy_event_chain.png)
+
+## HANDS_ON
+
+You can now [follow some illustrations](./illu.md) or directly go to [the exercises](./deployments_exos.md)
+
+## NEXT SESSION
+
+Then, move on to the [deployments](../2-DEPLOYMENTS/deployments.md)

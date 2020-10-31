@@ -47,3 +47,8 @@ Shell into the Pod and print out the created environment variables. You should f
 - Create a Pod named backendsecret that defines uses the Secret as environment variable named DB_PASSWORD and runs the container with the image nginx.
 
 - Shell into the Pod and print out the created environment variables. You should find DB_PASSWORD variable.
+
+
+## NEXT SESSION
+
+You've completed the first training main session. You can now try to use all the learning to complete the first [USE CASE](../USE_CASES/a-carrefour/README.md)

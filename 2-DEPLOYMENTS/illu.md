@@ -21,13 +21,13 @@ first of all let's configure nour remote registry and authenticate to access it 
 
 Personnally it points to my bpersonal docker hub.
 
-### Build custom base node.js image
+#### Build custom base node.js image
 
 We defined a new container image in (**[Dockerfile](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-utils/Dockerfile)**) node-utils that consists of nodejs base image enrich with some utilities such as telnet, netcat, ping, nslookup...
 
 Here is the content of the Dockerfile, including pulling node base image + installing 9 packages:
 
-```yaml
+```
 FROM node:latest
 RUN apt-get update && apt-get install -y netcat && \
     apt-get install -y nano && \
@@ -43,7 +43,7 @@ CMD [ "node"]
 
 We now want to build a new customer image:
 
-```yaml
+```
 docker build --tag pgolard/node-utils:v1 - < docker-images/node-utils/Dockerfile
 docker push pgolard/node-utils:v1
 ```
@@ -66,11 +66,11 @@ d5c847b5cd3f: Pull complete
 
 then and uploads it on docker hub
 
-```yaml
+```
 docker push pgolard/node-utils:v1
 ```
 
-### Build images for our 2 dummy Micro services - illustrations
+#### Build images for our 2 dummy Micro services - illustrations
 
 (**[msHello](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msHello)**)
 (**[msBye](../DOCKER_BASICS/docker-images/2-DEPLOYMENTS/node-app/svc-section/node-app/msBye)**)
@@ -79,13 +79,13 @@ Those 2 micro services consists of dockerizzd simple node.js applications.
 We first build and upload them to our docker hub.
 We repeat the operation 3 times; for every new build, we make a small modif. in source code and we increment the tag.
 
-```yaml
+```
 ./docker-images/build.sh 1
 ./docker-images/build.sh 2
 ./docker-images/build.sh 3
 ```
 
-### try to run one of our micro service:
+#### try to run one of our micro service:
 
 > docker run -it -p 7777:7777 --name ms-hello pgolard/ms-hello:v3
 
@@ -196,3 +196,11 @@ We validated the expectation we had with RS. The last key feature we're looking 
 
 
 > kubectl rollout undo deployment ms-bye-dep --to-revision=2
+
+## HANDS_ON
+
+Try yourself some [exercises](./deployments_exos.md)
+
+## NEXT SESSION
+
+Then, move on to the [deployments](../2-DEPLOYMENTS/deployments.md)

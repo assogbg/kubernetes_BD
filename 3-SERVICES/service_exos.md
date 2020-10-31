@@ -188,3 +188,8 @@ spec:
 
 ### reach you MS using minikube IP + nodePort
 > curl -X GET http:/192.168.64.7:31746/getImmortale\?clan\=savas
+
+
+## NEXT SESSION
+
+Then, move on to the [volumes](../4-VOLUMES/volumes.md)

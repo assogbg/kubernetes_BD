@@ -194,3 +194,11 @@ We need to find out in which IP address we have to curl as we didn't expose our 
 
 we can now curl from our minikube cluster to the IP of our pod. In our case, 172.17.0.2 and see that a request log has been added to our access.log hostpath.
 > curl 172.17.0.2
+
+## HANDS_ON
+
+You can try [the exercises](./volumes_exos.md)
+
+## NEXT SESSION
+
+Then, move on to the [ingress](../5-INGRESS/ingress.md)

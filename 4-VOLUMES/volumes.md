@@ -451,3 +451,11 @@ https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#persistentv
   > curl 172.17.0.2
 
 </details>
+
+## HANDS_ON
+
+You can now [follow some illustrations](./illu.md) or directly go to [the exercises](./volumes_exos.md)
+
+## NEXT SESSION
+
+Then, move on to the [ingress](../5-INGRESS/ingress.md)

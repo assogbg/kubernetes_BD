@@ -340,3 +340,8 @@ Let's say that we now want to rollback our last upgrade and move back to the fir
 - Check your rollout history, deployments, rs and pods
 
 - Which version should you receive while curling your pod ? Try it yourself
+
+
+## NEXT SESSION
+
+You've completed the exercises, move on to the [services](../3-SERVICES/services.md)

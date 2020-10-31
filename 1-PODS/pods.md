@@ -722,4 +722,9 @@ You may, of course, use a different image or shell. Some of the arguments explai
 
 ## HANDS_ON
 
-You can now [create your first Pods](./exercices/pods_exercices.md) and discover some useful Kubernetes commands.
+You can now [create your first Pods](./pods_exos.md) and discover some useful Kubernetes commands.
+
+## NEXT SESSION
+
+An additional optional session is available that dive into the [labels](./labels.md).
+Otherwise, move on to the [deployments](../2-DEPLOYMENTS/deployments.md)

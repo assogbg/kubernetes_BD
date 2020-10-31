@@ -181,5 +181,5 @@ Ingresses operate at the application layer of the network stack (HTTP) and can p
 
 
 
-back to ingress home **[:arrow_left:](README.md)**
+back to ingress home **[:arrow_left:](ingress.md)**
 **[:arrow_right:](core-comp.md)** next section core components

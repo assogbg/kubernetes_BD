@@ -3,22 +3,31 @@
 In this section we're going to talk about **services**.
 Services are an essential component of Kubernetes, basically used to ***expose pods*** (directly or through deployments/replicasets) by providing a ***Static Virtual IP***.
 
-* [Dummy Applications](#Dummy-applications)
-* [Services Overview](#Services-overview)
-  * [Vocation](#Vocation) pods and labels ... see book k8s in action p. 155
-  * [Services specifications](#Services-specifications) yaml, commands, ports and targetports, protocols
-* [Core Networking](#core-networking)
-  * [kube-proxy](#kube-proxy)
-  * [kube-dns](#kube-dns) illustrations avec FQDN   
-* [Service discovery](#Service-discovery)
-  * [DNS](#DNS)
-  * [Environment Variables](#Environment-Variables)
-* [Types of services](#types-of-services)
-  * [Cluster-Ip](#Cluster-Ip) actually there is always a cluster ip svc but additionnal ??? features can be added?
-  * [NodePort](#NodePort)
-  * [LoadBalancer](#LoadBalancer) explains that all svc do some load balancing but this one is related to cloud providers. show the difference between lbi and lbe
-  * [Service with Multiple Ports](#EndPoints) Manually configuring service endpoints - p 132 of the book (extternal name service, endpoints without selector ...)
-  * [EndPoints](#EndPoints) Manually configuring service endpoints - p 132 of the book (extternal name service, endpoints without selector ...)
+- [Services](#services)
+  - [Dummy Applications](#dummy-applications)
+      - [Docker Images](#docker-images)
+      - [Kubernetes Deployments Definitions](#kubernetes-deployments-definitions)
+      - [Kubernetes Deployments Analysis](#kubernetes-deployments-analysis)
+  - [Services overview](#services-overview)
+      - [Vocation](#vocation)
+      - [Service specifications](#service-specifications)
+      - [Illustration](#illustration)
+  - [Core Networking](#core-networking)
+      - [Kube-proxy](#kube-proxy)
+      - [Kube-dns](#kube-dns)
+      - [Controllers](#controllers)
+  - [Service Discovery](#service-discovery)
+      - [DNS](#dns)
+      - [Environment Variables](#environment-variables)
+  - [Types of services](#types-of-services)
+      - [Services without Pod SELECTOR](#services-without-pod-selector)
+        - [***Manually configuring EndPoints***](#manually-configuring-endpoints)
+        - [***ExternalName Service***](#externalname-service)
+      - [headless service](#headless-service)
+      - [ClusterIP](#clusterip)
+      - [NodePorts](#nodeports)
+        - [LoadBalancer](#loadbalancer)
+      - [Multiple Ports service](#multiple-ports-service)
 
 
 TODO mention sessionAffinity if you want to always direct traffic to same pods - p 126 book
@@ -29,7 +38,7 @@ TODO mention sessionAffinity if you want to always direct traffic to same pods -
 
 To illustrate the concepts of this chapter, we use 2 basic **[node.js applications](../docker-images/node-app/svc-section/)**, built as docker images and pushed on a public docker hub repository.
 
-![](pic/basic-node.jpeg)
+![](pics/basic-node.jpeg)
 
 
 Those 2 node.js applications *ms-hello* and *ms-bye*
@@ -125,7 +134,7 @@ spec:
 
 Now we create our deployments :
 
-```
+```yaml
 kubectl apply -f illustrations/initial_objects/ms-bye-dep.yaml
 kubectl apply -f illustrations/initial_objects/ms-hello-dep.yaml
 ```
@@ -134,21 +143,19 @@ kubectl apply -f illustrations/initial_objects/ms-hello-dep.yaml
 
 We observe the following properties:
 
-```
+```yaml
  kubectl get deploy,rs,po -o wide --show-labels
 ```
 
 The previous command displays details of deployments, replicasets and pods :
 
-```
+```yaml
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                SELECTOR            LABELS
 deployment.apps/ms-bye-dep     2/2     2            2           3m48s   ms-bye       pgolard/ms-bye:v4     app=ms-bye-pods     app=ms-bye-dep
 deployment.apps/ms-hello-dep   2/2     2            2           3m41s   ms-hello     pgolard/ms-hello:v4   app=ms-hello-pods   app=ms-hello-dep
-
 NAME                                     DESIRED   CURRENT   READY   AGE     CONTAINERS   IMAGES                SELECTOR                                        LABELS
 replicaset.apps/ms-bye-dep-db48f7976     2         2         2       3m48s   ms-bye       pgolard/ms-bye:v4     app=ms-bye-pods,pod-template-hash=db48f7976     app=ms-bye-pods,pod-template-hash=db48f7976
 replicaset.apps/ms-hello-dep-c4954867b   2         2         2       3m41s   ms-hello     pgolard/ms-hello:v4   app=ms-hello-pods,pod-template-hash=c4954867b   app=ms-hello-pods,pod-template-hash=c4954867b
-
 NAME                               READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES   LABELS
 pod/ms-bye-dep-db48f7976-7nh68     1/1     Running   0          3m48s   172.17.0.9    minikube   <none>           <none>            app=ms-bye-pods,pod-template-hash=db48f7976
 pod/ms-bye-dep-db48f7976-l22l2     1/1     Running   0          3m48s   172.17.0.8    minikube   <none>           <none>            app=ms-bye-pods,pod-template-hash=db48f7976
@@ -186,6 +193,7 @@ Escape character is '^]'.
 command terminated with exit code 1
 ```
 
+ff
 
 > kubectl exec -it ms-hello-dep-69558b588b-9jcm7 ping 172.17.0.8
 ```
@@ -205,8 +213,10 @@ PING 172.17.0.8 (172.17.0.8) 56(84) bytes of data.
 --- 172.17.0.8 ping statistics ---
 11 packets transmitted, 11 received, 0% packet loss, time 10225ms
 rtt min/avg/max/mdev = 0.042/0.063/0.121/0.019 ms
+
 ```
 
+l
 
 > kubectl exec -it ms-hello-dep-69558b588b-9jcm7 curl 172.17.0.8:9999
 ```
@@ -232,6 +242,7 @@ Remember some of the initial promises of k8s as an advanced containerized micro 
 - load balancing and service discovery
 
 
+Therefore, it is impossible to keep track of pods' ip if you want your MS to communicate together inside your cluster.
 The sustainable solution, to make sure that your microservices can communicate, is called the service, another k8s resource.
 
 A Service is an abstraction which defines
@@ -248,7 +259,7 @@ A key detail of Services is that they consist of an IP and port pair (or multipl
 Basically you can expose pods (potentially pods managed through deployments) using the command line via the following command:
 
 
-```
+```yaml
 kubectl --dry-run=true -o yaml expose deployment ms-bye-dep --name=ms-bye-svc --port=19 --target-port=9999 --type=ClusterIP
 kubectl --dry-run=true -o yaml expose deployment ms-hello-dep --name=ms-hello-svc --port=17 --target-port=7777 --type=ClusterIP
 ```
@@ -287,8 +298,6 @@ spec:
   type: ClusterIP
 ```
 
-
-
 We currently set aside the service type. We'll see that deeper in the next section.
 
 <u>***metadata***</u>
@@ -297,7 +306,7 @@ We currently set aside the service type. We'll see that deeper in the next secti
 
 
 <u>***spec***</u>
-  * `selector` : <key,value> - defines a logical set of Pods that are backing the service and constitute the real ENDPOINTS of the service. Basically the iptables can keep track of those pods using the selector criteria to filter out the pods the traffic needs to be forwarded to. ![](pic/svc-matching.png)
+  * `selector` : <key,value> - defines a logical set of Pods that are backing the service and constitute the real ENDPOINTS of the service. Basically the iptables can keep track of those pods using the selector criteria to filter out the pods the traffic needs to be forwarded to. ![](pics/svc-matching.png)
   * `type` : there are several types of services that can be created. They will be described later on in that chapter. Here we see the most basic type <ClusterIp>. This consists of a static virtual ip that exposes a logical set of pods WITHIN the cluster. The cluster ip in itself is not accessible from outside the cluster.
 
   <u>***ports***</u>
@@ -320,21 +329,21 @@ This will generate modifications in the logical set of pods that are bound to th
 We saw in the previous that our pods can be exposed through services. We also went through the yaml definition of a service.
 Let's create those services.
 
-```
+```yaml
 kubectl apply -f illustrations/initial_objects/ms-bye-svc.yaml
 kubectl apply -f illustrations/initial_objects/ms-hello-svc.yaml
 ```
 
 Then we'll focus on the ms-hello pods and services.
 If you run the following command, you will see information about pods, services and end points:
-```
+```yaml
 kubectl get pods,services,endpoints -o wide --show-labels
 ```
 
 
 The picture below highlights the elements we described in the previous section:
 
-![](pic/svc-matching_v3.png)
+![](pics/svc-matching_v3.png)
 
 In order to manipulate and illustrate the services, we will use the utils of our node.js custom docker image.
 
@@ -344,15 +353,15 @@ In our example, we're going to
 - connect to a pod that is part of our *ms-bye-dep*
 - run a curl command that will generate an HTTP request to our service *ms-hello-svc*:*svc port*. This service is backed by 2 pods from our ms-hello deployment.
 
-![](pic/curl_exec.png)
+![](pics/curl_exec.png)
 
 
-```
+```yaml
  kubectl exec ms-bye-dep-db48f7976-7nh68 -- curl -X GET http://10.96.126.57:17
 ```
 
 We see in the terminal that we get an answer (hello world message at the root of our ms-hello microservice. Please see the docker image section to go through the code):
-```
+```yaml
 % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                Dload  Upload   Total   Spent    Left  Speed
 100    42  100    42    0     0  13990      0 --:--:-- --:--:-- --:--:-- 21000
@@ -363,7 +372,7 @@ We have to connect to a pod to run the "curl" command since the service type of 
 Please note that we could have used any of our 4 pods to run the curl command, as long as we run the command from within the cluster.
 If your cluster is running on minikube, you can also ssh into your minikube VM and run the curl comand, using the clusterIp since your cluster is running on minikube VM:
 
-![](pic/minikube_ssh_svc.png)
+![](pics/minikube_ssh_svc.png)
 
 In the picture below we see on the left a terminal where we have run our "curl" command several times.
 On the right pane, we see the results of a "watch" command on the two pods that are backing the ms-hello-svc (the actual 2 end points of our ms-hello-svc service), which means that `kubectl logs <podName>`  is refreshed every 2 seconds.
@@ -371,10 +380,11 @@ On the right pane, we see the results of a "watch" command on the two pods that 
 
 
 > watch kubectl logs ms-hello-dep-c4954867b-l6wgt
+
 > watch kubectl logs ms-hello-dep-c4954867b-zbfm6
 
 
-![](pic/curl_watch.png)
+![](pics/curl_watch.png)
 
 
 We notice that even though we make an HTTP request to the  *ms-hello-svc*:*svc port*
@@ -387,28 +397,31 @@ Let's run some other tests:
 
 
 > kubectl exec ms-bye-dep-db48f7976-7nh68 -- nc -zv ms-hello-svc 17
-```
+```yaml
 ms-hello-svc.default.svc.cluster.local [10.96.126.57] 17 (qotd) open
 ```
 
 - <u>nslookup</u>: resolve dns entries
 
+```yaml
+kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
 
-> kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
-```
+
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
 ```
 
 - <u>ping</u>: while *telnet* and *netcat* ran successfully on the service ip adress and service port, ping is not working using the service static ip adress. On the other hand, we see that we can ping the pod ip adress :
 
-> kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 10.96.126.57
-
-does not work, while pinging pod ip does:
-
+```yaml
+kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 10.96.126.57
+^C
 ```
+
+```yaml
 kubectl exec ms-bye-dep-db48f7976-7nh68 -- ping 172.17.0.10
 PING 172.17.0.10 (172.17.0.10) 56(84) bytes of data.
 64 bytes from 172.17.0.10: icmp_seq=1 ttl=64 time=0.096 ms
@@ -420,7 +433,6 @@ PING 172.17.0.10 (172.17.0.10) 56(84) bytes of data.
 64 bytes from 172.17.0.10: icmp_seq=7 ttl=64 time=0.162 ms
 64 bytes from 172.17.0.10: icmp_seq=8 ttl=64 time=0.096 ms
 ```
-
 That’s because the service’s cluster IP is a virtual IP, and only has meaning when combined with the service port.
 
 
@@ -439,27 +451,29 @@ Everything related to Services is handled by the kube-proxy pod **running on eac
 
 Initially, the kube-proxy was an actual proxy waiting for connections and for each incoming connection, opening a new connection to one of the pods. This was called the userspace proxy mode.
 
-![](pic/old_kubeproxy.png)
+![](pics/old_kubeproxy.png)
 
 Later, a better-performing *iptables proxy mode* replaced it. Kube-proxy looks now like a railway switchman.
 
 Actually kube-proxy is part of a **DaemonSet**: a set of pods that makes sure one pod the daemonset is running on EVERY node of your cluster (**1 pod per node**).
 
-![](pic/new_kubeproxy.png)
+![](pics/new_kubeproxy.png)
 
 When a service is created in the API server, the virtual IP address is assigned to it immediately.
 Soon afterward, the API server **notifies all kube-proxy agents running on the worker nodes** that a **new Service has been created.**
 
 Each kube-proxy **makes that service addressable** on its node by setting up **iptables rules,** which make sure
+
 - each ***packet*** destined for the **service IP/port** pair is **intercepted**
 - its **destination address modified**, so the packet is redirected to one of the **pods backing** the **service** (redirected to an EndPoint)
 
 Besides **watching** the **API server for changes to Services,** kube-proxy also watches for **changes to Endpoints objects.**
 An Endpoints object **holds the IP/port pairs of all the pods that back the service** (an IP/port pair can also point to something other than a pod). That’s why the **kube-proxy must also watch all Endpoints objects**.
 
-![](pic/endpoints_controller.png)
+![](pics/endpoints_controller.png)
 
 After all, an Endpoints object changes every time
+
 - **new backing pod** is created or deleted
 - readiness status changes  
 - pod’s **labels change** and it **falls in or out of scope of the service.**
@@ -469,20 +483,25 @@ Instead, the **selector** is **used** to **build** a **list of IPs and ports**, 
 
 As an illustration, let's get back to our dummy applications and have a look at the *ms-hello* svc, pods and end points:
 
-> kubectl get svc,ep,po -o wide --show-labels -l 'app in (ms-hello-dep, ms-hello-pods)'
-```
+```yaml
+kubectl get svc,ep,po -o wide --show-labels -l 'app in (ms-hello-dep, ms-hello-pods)'
+
+
 NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE     SELECTOR            LABELS
 service/ms-hello-svc   ClusterIP   10.96.126.57   <none>        17/TCP    5h30m   app=ms-hello-pods   app=ms-hello-dep
+
 NAME                     ENDPOINTS                           AGE     LABELS
 endpoints/ms-hello-svc   172.17.0.10:7777,172.17.0.11:7777   5h30m   app=ms-hello-dep
+
 NAME                               READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES   LABELS
 pod/ms-hello-dep-c4954867b-d798w   1/1     Running   0          58m   172.17.0.11   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=c4954867b
 pod/ms-hello-dep-c4954867b-f494q   1/1     Running   0          58m   172.17.0.10   minikube   <none>           <none>            app=ms-hello-pods,pod-template-hash=c4954867b
+
 ```
 
 If we run a `kubeclt describe svc ms-hello-svc`  we see the following elements, notably the Endpoints of this service :
 
-```
+```yaml
 Name:              ms-hello-svc
 Namespace:         default
 Labels:            app=ms-hello-dep
@@ -500,7 +519,7 @@ Events:            <none>
 
 When a client connects to a service, the service proxy selects one of those IP and port pairs (defined as EndPoints of the service) and redirects the incoming connection to the server listening at that location.
 
-![](pic/kubeproxyrole.png)
+![](pics/kubeproxyrole.png)
 
 
 So basically, kube-proxy watches to keep its iptables rules up-to-date
@@ -536,16 +555,97 @@ Whenever you ***create a service***, a ***DNS record*** pointing to the service'
 If DNS has been enabled throughout your cluster then all Pods should automatically be able to resolve Services by their DNS name (retrieve service cluster ip based on the name).
 
 If a request is made to a service VIP using its FQDN, the request coming to kube-proxy is resolved using DNS pod.
-![](pic/kubedns.png)
+![](pics/kubedns.png)
 
 To illustrate that, let's get back to our current dummy application. We do a nslookup command on the ms-hello-svc to retrieve the service cluster ip:
 
-```
+```yaml
 kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
+
+
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
+
+```
+
+#### Controllers
+
+As explained in the **[architecture section](../1-ARCHITECTURE/README.md), Kubernetes objects are called `Resources`.
+There are 2 types of resources:
+
+- `Workload Resources`: kubernetes objects that contain specifications to run  containers (desired state)
+- `Resources`: other types of k8s objects that do not aim at creating containers
+
+The service controller listens to Service object Create, Update and Delete events and then configures Endpoints for those Services appropriately.
+
+To access Services, it requires List, and Watch access. To update Services, it requires Patch and Update access.
+
+To set up Endpoints resources for the Services, it requires access to Create, List, Get, Watch, and Update.
+
+> kubectl describe clusterrolebinding system:controller:service-controller  -n kube-system
+
+```yaml
+Name:         system:controller:service-controller
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+Role:
+  Kind:  ClusterRole
+  Name:  system:controller:service-controller
+Subjects:
+  Kind            Name                Namespace
+  ----            ----                ---------
+  ServiceAccount  service-controller  kube-system
+```
+
+> kubectl describe clusterrole system:controller:service-controller  -n kube-system
+
+```yaml
+Name:         system:controller:service-controller
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources             Non-Resource URLs  Resource Names  Verbs
+  ---------             -----------------  --------------  -----
+  events                []                 []              [create patch update]
+  events.events.k8s.io  []                 []              [create patch update]
+  services              []                 []              [get list watch]
+  nodes                 []                 []              [list watch]
+  services/status       []                 []              [patch update]
+```
+
+> kubectl describe clusterrolebinding system:controller:endpoint-controller  -n kube-system
+
+```yaml
+Name:         system:controller:endpoint-controller
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+Role:
+  Kind:  ClusterRole
+  Name:  system:controller:endpoint-controller
+Subjects:
+  Kind            Name                 Namespace
+  ----            ----                 ---------
+  ServiceAccount  endpoint-controller  kube-system
+```
+
+> kubectl describe clusterrole system:controller:endpoint-controller  -n kube-system
+
+```yaml
+Name:         system:controller:endpoint-controller
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources             Non-Resource URLs  Resource Names  Verbs
+  ---------             -----------------  --------------  -----
+  endpoints             []                 []              [create delete get list update]
+  events                []                 []              [create patch update]
+  events.events.k8s.io  []                 []              [create patch update]
+  endpoints/restricted  []                 []              [create]
+  pods                  []                 []              [get list watch]
+  services              []                 []              [get list watch]
 ```
 
 
@@ -559,25 +659,31 @@ If you have several micro services and want them to communicate together, there 
 As illustrated below, the kube-dns resolves the service ip based on service name:
 
 > kubectl exec ms-bye-dep-db48f7976-7nh68 -- busybox nslookup ms-hello-svc
-```
+
+```yaml
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
+
 ```
 
 It means that you can use the service name as url in your application code. Below another way to illustrate the dns resolution generated by the kube-dns pod:
 
 > kubectl exec ms-bye-dep-db48f7976-7nh68 -- wget -O- ms-hello-svc:17
-```
+```yaml
 --2020-10-01 21:22:05--  http://ms-hello-svc:17/
 Resolving ms-hello-svc (ms-hello-svc)... 10.96.126.57
 Connecting to ms-hello-svc (ms-hello-svc)|10.96.126.57|:17... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 42 [text/html]
 Saving to: 'STDOUT'
+
      0K                                                       100%  809K=0s
+
 2020-10-01 21:22:06 (809 KB/s) - written to stdout [42/42]
+
 This is the hello world custom node parent%
 ```
 
@@ -587,7 +693,7 @@ This is the hello world custom node parent%
 As illustrated below, environment variables are created in all your pods. Among thos variables you find services ip and ports.
 
 > kubectl exec ms-bye-dep-db48f7976-7nh68 -- printenv
-```
+```yaml
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=ms-bye-dep-db48f7976-7nh68
 KUBERNETES_SERVICE_PORT_HTTPS=443
@@ -608,8 +714,7 @@ If you take a close look at the environment variables that we printed above, you
 This is due to the fact we created our services AFTER our replica set.
 
 Let's force a re-creation of our replicasets by scaling down then up our deployment.
-
-```
+```yaml
 kubectl scale deployment ms-bye-dep --replicas=0
 kubectl scale deployment ms-bye-dep --replicas=2
 kubectl scale deployment ms-hello-dep --replicas=0
@@ -618,17 +723,19 @@ kubectl scale deployment ms-hello-dep --replicas=2
 
 And let's now examine our pods, services and end points:
 > kubectl get svc,po,ep
-```
+```yaml
 NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes     ClusterIP   10.96.0.1      <none>        443/TCP   115d
 service/ms-bye-svc     ClusterIP   10.96.105.32   <none>        19/TCP    4h31m
 service/ms-hello-svc   ClusterIP   10.96.126.57   <none>        17/TCP    4h31m
+
 NAME                               READY   STATUS        RESTARTS   AGE
 pod/ms-bye-dep-db48f7976-6jtj9     1/1     Running       0          45s
 pod/ms-bye-dep-db48f7976-tb9r4     1/1     Running       0          45s
 pod/ms-hello-dep-c4954867b-d798w   1/1     Running       0          4s
 pod/ms-hello-dep-c4954867b-f494q   1/1     Running       0          4s
 pod/ms-hello-dep-c4954867b-l6wgt   0/1     Terminating   0          4h38m
+
 NAME                     ENDPOINTS                           AGE
 endpoints/kubernetes     192.168.64.7:8443                   115d
 endpoints/ms-bye-svc     172.17.0.8:9999,172.17.0.9:9999     4h31m
@@ -639,7 +746,7 @@ We see that our pods are pretty recent (AGE).
 Let's have a look at the environment variables:
 
 > kubectl exec ms-bye-dep-db48f7976-tb9r4 -- printenv | grep SERVICE
-```
+```yaml
 MS_BYE_SVC_SERVICE_PORT=19
 MS_HELLO_SVC_SERVICE_PORT=17
 KUBERNETES_SERVICE_PORT_HTTPS=443
@@ -758,25 +865,31 @@ In order to test *ext-api-svc*, please do not forget to include header --header 
 First try to curl google.com from your local machine (outside the cluster) to see the expected result:
 
 > curl www.google.com --header "Host: www.google.com"
-```
-<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="nl-BE"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script nonce="z7I14bo7qPWs/KLUApM1mQ==">(function(){window.google={kEI:'9hx1X9uKG8mNlwT49q2gDg',kEXPI:'0,202159 ...
+```yaml
+<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="nl-BE"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script nonce="z7I14bo7qPWs/KLUApM1mQ==">(function(){window.google={kEI:'9hx1X9uKG8mNlwT49q2gDg',kEXPI:'0,202159,3,1151585,5662,730,224,5105,206,3204,10,1226,364,926,573,612,205,6,377,246,5,1354,648,3451,315,3,66,308,459,217,284,427,440,112,101,353,457,87,189,685,342,1118822,1197701,581,328985,13677,4855,32692,16114,28684,9188,8384,4859,1361,9291,3026,2818,1923,2647,8386,1808,4998,7931,5297,2054,920,873,6977,3645,14528,4516,2778,919,2277,8,2796,1593,1279,2212,530,149,1103,840,519,1464,57,157,4100,108,204,1137,2,2063,606,2025,544,1231,520,1947,2229,93,328,1284,24,2919,2247,1812,1787,2273,1,955,1987,856,7,4774,825,469,6286,4455,641,6134,1406,337,4928,108,3409,906,2,941,2614,2397,1386,6082,1706,1571,3,576,970,865,4624,149,189,3313,2489,2251,3942,1791,4,1528,702,1602,1236,271,874,285,120,42,1818,2393,537,43,930,281,52,2377,464,459,1555,1232,2835,1036,1315,3,2108,175,997,1426,69,2415,200,2811,1753,690,1542,426,2173,1990,79,519,912,564,464,656,30,470,833,1404,1147,138,1819,17,1259,874,116,52,1774,992,19,245,255,2214,850,80,368,1,101,105,800,638,665,875,84,360,115,2,479,88,585,423,48,2005,695,656,992,1367,4,797,1597,698,790,598,115,50,161,51,46,508,2,476,481,243,60,30,326,401,11,731,64,97,10,208,286,95,17,248,490,2,1293,114,1059,133,1691,107,42,500,1058,176,355,393,283,243,233,738,5754193,1873,5998827,2801216,549,333,444,1,2,80,1,900,896,1,9,2,2551,1,748,141,59,736,563,1,4265,1,1,2,1017,9,305,3299,248,595,1,529,1,34,76,38,46,14,2,2,17,25,2,2,45,23,1,2,1,5,2,1,1,1,1,1,6,1,6,11,1,23959363,54,2716084,12107',kBL:'4o77'};google.sn='webhp';google.kHL='nl-BE';})();(function(){google.lc=[];google.li=0;google.getEI=function(a){for(var c;a&&(!a.getAttribute||!(c=a.getAttribute("eid")));)a=a.parentNode;return c||google.kEI};google.getLEI=function(a){for(var c=null;a&&(!a.getAttribute||!(c=a.getAttribute("leid")));)a=a.parentNode;return c};google.ml=function(){return null};google.time=function(){return Date.now()};google.log=function(a,c,b,d,g){if(b=google.logUrl(a,c,b,d,g)){a=new Image;var e=google.lc,f=google.li;e[f]=a;a.onerror=a.onload=a.onabort=function(){delete e[f]};google.vel&&google.vel.lu&&google.vel.lu(b);a.src=b;google.li=f+1}};google.logUrl=function(a,c,b,d,g){var e="",f=google.ls||"";b||-1!=c.search("&ei=")||(e="&ei="+google.getEI(d),-1==c.search("&lei=")&&(d=google.getLEI(d))&&(e+="&lei="+d));d="";!b&&google.cshid&&-1==c.search("&cshid=")&&"slh"!=a&&(d="&cshid="+google.cshid);b=b||"/"+(g||"gen_204")+"?atyp=i&ct="+a+"&cad="+c+e+f+"&zx="+google.time()+d;/^http:/i.test(b)&&"https:"==window.location.protocol&&(google.ml(Error("a"),!1,{src:b,glmm:1}),b="");return b};}).call(this);(function(){google.y={};google.x=function(a,b){if(a)var c=a.id;else{do c=Math.random();while(google.y[c])}google.y[c]=[a,b];return!1};google.lm=[];google.plm=function(a){google.lm.push.apply(google.lm,a)};google.lq=[];google.load=function(a,b,c){google.lq.push([[a],b,c])};google.loadAll=function(a,b){google.lq.push([a,b])};}).call(this);google.f={};(function(){
+document.documentElement.addEventListener("submit",function(b){var a;if(a=b.target){var c=a.getAttribute("data-submitfalse");a="1"==c||"q"==c&&!a.elements.q.value?!0:!1}else a=!1;a&&(b.preventDefault(),b.stopPropagation())},!0);document.documentElement.addEventListener("click",function(b){var a;a:{for(a=b.target;a&&a!=document.documentElement;a=a.parentElement)if("A"==a.tagName){a="1"==a.getAttribute("data-nohref");break a}a=!1}a&&b.preventDefault()},!0);}).call(this);
+var a=window.location,b=a.href.indexOf("#");if(0<=b){var c=a.href.substring(b+1);/(^|&)q=/.test(c)&&-1==c.indexOf("#")&&a.replace("/search?"+c.replace(/(^|&)fp=[^&]*/g,"")+"&cad=h")};</script><style>#gbar,#guser{font-size:13px;padding-top:1px !important;}#gbar{height:22px}#guser{padding-bottom:7px !important;text-align:right}.gbh,.gbd{border-top:1px solid #c9d7f1;font-size:1px}.gbh{height:0;position:absolute;top:24px;width:100%}@media all{.gb1{height:22px;margin-right:.5em;vertical-align:top}#gbar{float:left}}a.gb1,a.gb4{text-decoration:underline !important}a.gb1,a.gb4{color:#00c !important}.gbi .gb4{color:#dd8e27 !important}.gbf .gb4{color:#900 !important}
+</style><style>body,td,a,p,.h{font-family:arial,sans-serif}body{margin:0;overflow-y:scroll}#gog{padding:3px 8px 0}td{line-height:.8em}.gac_m td{line-height:17px}form{margin-bottom:20px}.h{color:#36c}.q{color:#00c}em{font-weight:bold;font-style:normal}.lst{height:25px;width:496px}.gsfi,.lst{font:18px arial,sans-serif}.gsfs{font:17px arial,sans-
+...
+
 ```
 
 Then create the ExternalName service:
 
 
-```
+```yaml
 kubectl apply -f illustrations/initial_objects/extname_svc.yaml
 ```
 
 First we take a look at the svc and end-points generated:
 > kubectl get svc,ep
-```
+```yaml
 NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 service/ext-api-svc    ExternalName   <none>         google.com    80/TCP    56m
 service/kubernetes     ClusterIP      10.96.0.1      <none>        443/TCP   116d
 service/ms-bye-svc     ClusterIP      10.96.105.32   <none>        19/TCP    7h56m
 service/ms-hello-svc   ClusterIP      10.96.126.57   <none>        17/TCP    7h56m
+
 NAME                     ENDPOINTS                           AGE
 endpoints/kubernetes     192.168.64.7:8443                   116d
 endpoints/ms-bye-svc     172.17.0.8:9999,172.17.0.9:9999     7h56m
@@ -791,8 +904,13 @@ We see that our externalName service *ext-api-sc*
 Now let's try to curl from a pod inside our cluster, using the service FQDN:
 
 > kubectl exec ms-bye-dep-db48f7976-tb9r4 -- curl ext-api-svc.default.svc.cluster.local --header "Host: www.google.com"
-```
-<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="nl-BE"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script nonce="z7I14bo7qPWs/KLUApM1mQ==">(function(){window.google={kEI:'9hx1X9uKG8mNlwT49q2gDg',kEXPI:'0,202159,3,1151585,5662,730,224,5105,206,3204,10,1226,364,926,573,612,205,6,377,246,5,1354,648,3451,315,3,66,308,459,217,284,427,440,112,101,353,457,87,189,685,342,1118822,1197701,581,328985,13677,4855,32692,16114,28684,9188,8384,4859,1361,9291,3026,2818,1923,2647,8386,1808,4998,7931....
+
+```yaml
+<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="nl-BE"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script nonce="z7I14bo7qPWs/KLUApM1mQ==">(function(){window.google={kEI:'9hx1X9uKG8mNlwT49q2gDg',kEXPI:'0,202159,3,1151585,5662,730,224,5105,206,3204,10,1226,364,926,573,612,205,6,377,246,5,1354,648,3451,315,3,66,308,459,217,284,427,440,112,101,353,457,87,189,685,342,1118822,1197701,581,328985,13677,4855,32692,16114,28684,9188,8384,4859,1361,9291,3026,2818,1923,2647,8386,1808,4998,7931,5297,2054,920,873,6977,3645,14528,4516,2778,919,2277,8,2796,1593,1279,2212,530,149,1103,840,519,1464,57,157,4100,108,204,1137,2,2063,606,2025,544,1231,520,1947,2229,93,328,1284,24,2919,2247,1812,1787,2273,1,955,1987,856,7,4774,825,469,6286,4455,641,6134,1406,337,4928,108,3409,906,2,941,2614,2397,1386,6082,1706,1571,3,576,970,865,4624,149,189,3313,2489,2251,3942,1791,4,1528,702,1602,1236,271,874,285,120,42,1818,2393,537,43,930,281,52,2377,464,459,1555,1232,2835,1036,1315,3,2108,175,997,1426,69,2415,200,2811,1753,690,1542,426,2173,1990,79,519,912,564,464,656,30,470,833,1404,1147,138,1819,17,1259,874,116,52,1774,992,19,245,255,2214,850,80,368,1,101,105,800,638,665,875,84,360,115,2,479,88,585,423,48,2005,695,656,992,1367,4,797,1597,698,790,598,115,50,161,51,46,508,2,476,481,243,60,30,326,401,11,731,64,97,10,208,286,95,17,248,490,2,1293,114,1059,133,1691,107,42,500,1058,176,355,393,283,243,233,738,5754193,1873,5998827,2801216,549,333,444,1,2,80,1,900,896,1,9,2,2551,1,748,141,59,736,563,1,4265,1,1,2,1017,9,305,3299,248,595,1,529,1,34,76,38,46,14,2,2,17,25,2,2,45,23,1,2,1,5,2,1,1,1,1,1,6,1,6,11,1,23959363,54,2716084,12107',kBL:'4o77'};google.sn='webhp';google.kHL='nl-BE';})();(function(){google.lc=[];google.li=0;google.getEI=function(a){for(var c;a&&(!a.getAttribute||!(c=a.getAttribute("eid")));)a=a.parentNode;return c||google.kEI};google.getLEI=function(a){for(var c=null;a&&(!a.getAttribute||!(c=a.getAttribute("leid")));)a=a.parentNode;return c};google.ml=function(){return null};google.time=function(){return Date.now()};google.log=function(a,c,b,d,g){if(b=google.logUrl(a,c,b,d,g)){a=new Image;var e=google.lc,f=google.li;e[f]=a;a.onerror=a.onload=a.onabort=function(){delete e[f]};google.vel&&google.vel.lu&&google.vel.lu(b);a.src=b;google.li=f+1}};google.logUrl=function(a,c,b,d,g){var e="",f=google.ls||"";b||-1!=c.search("&ei=")||(e="&ei="+google.getEI(d),-1==c.search("&lei=")&&(d=google.getLEI(d))&&(e+="&lei="+d));d="";!b&&google.cshid&&-1==c.search("&cshid=")&&"slh"!=a&&(d="&cshid="+google.cshid);b=b||"/"+(g||"gen_204")+"?atyp=i&ct="+a+"&cad="+c+e+f+"&zx="+google.time()+d;/^http:/i.test(b)&&"https:"==window.location.protocol&&(google.ml(Error("a"),!1,{src:b,glmm:1}),b="");return b};}).call(this);(function(){google.y={};google.x=function(a,b){if(a)var c=a.id;else{do
+
+....
+
+
 ```
 
 
@@ -801,7 +919,7 @@ ExternalName services can be useful when a service is currently outside the kube
 Let's try to **simulate a migration**. We imagine that we want to migrate our service *ext-api-svc* and move it inside our k8s cluster.
 
 To test this, we're going to create a new deployment called "nginx", and its pod will become the new backend of the *ext-api-svc*  service:
-```
+```yaml
 kubectl create deploy nginx --image=nginx
 ```
 
@@ -825,24 +943,27 @@ spec:
 
 Now we see that the *ext-api-svc* has an **EndPoint** which is the nginx pod ip:
 > kubectl get svc,ep
-```
+```yaml
 NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 service/ext-api-svc    ClusterIP   10.96.238.116   <none>        80/TCP    3m44s
 service/kubernetes     ClusterIP   10.96.0.1       <none>        443/TCP   116d
 service/ms-bye-svc     ClusterIP   10.96.105.32    <none>        19/TCP    8h
 service/ms-hello-svc   ClusterIP   10.96.126.57    <none>        17/TCP    8h
+
 NAME                     ENDPOINTS                           AGE
 endpoints/ext-api-svc    172.17.0.12:80                      3m44s
 endpoints/kubernetes     192.168.64.7:8443                   116d
 endpoints/ms-bye-svc     172.17.0.8:9999,172.17.0.9:9999     8h
 endpoints/ms-hello-svc   172.17.0.10:7777,172.17.0.11:7777   8h
+
 ```
 
 Last step, now we test curling the FQDN of our *ext-api-svc*, and we see that we end up with the nginx web page instead of google.com:
 
 > kubectl exec ms-bye-dep-db48f7976-tb9r4 -- curl ext-api-svc.default.svc.cluster.local --header "Host: www.google.com"
-```
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+
+```yaml
+ % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100   612  100   612    0    <!DOCTYPE html>0 --:--:-- --:--:-- --:--:--     0
 <html>
@@ -860,10 +981,12 @@ Last step, now we test curling the FQDN of our *ext-api-svc*, and we see that we
 <h1>Welcome to nginx!</h1>
 <p>If you see this page, the nginx web server is successfully installed and
 working. Further configuration is required.</p>
+
 <p>For online documentation and support please refer to
 <a href="http://nginx.org/">nginx.org</a>.<br/>
 Commercial support is available at
 <a href="http://nginx.com/">nginx.com</a>.</p>
+
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
@@ -889,6 +1012,7 @@ When you **neither need nor want load-balancing and a single service IP**, creat
 With a **headless service that defines selectors**, the **endpoints controller creates endpoint records** in the API, **modifying the DNS configuration to return A records (addresses) that point to the pods** that back the service.
 
 To illustrate the difference between a regular clusterIp service and a headless service, let's expose our ms-hello-dep deployment with a second service:
+
 ```yaml
 apiVersion: v1
 kind: Service
@@ -905,14 +1029,18 @@ spec:
   selector:
     app: ms-hello-pods
 ```
+
 Please note we indicated the same selector as the regular ms-hello-svc. The only difference is we forced the ClusterIp value to *none*.
-```
+
+``` yaml
 kubectl apply -f illustrations/initial_objects/headless-hello-svc.yaml
 ```
+
 Let's have a look at the svc and endpoints resources we have:
 
 > kubectl get svc,ep
-```
+
+```yaml
 NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 service/headless-hello-svc   ClusterIP   None            <none>        17/TCP    4s
 service/ms-bye-svc           ClusterIP   10.96.105.32    <none>        19/TCP    30h
@@ -927,7 +1055,8 @@ We see that clusterIp is set to none for the headless service.
 If we compare both services that exposes ms-hello-pods, we see that both have a service type "ClusterIp" even though the cluster-ip is set to none for the headless service.
 
 > kubectl describe svc headless-hello-svc
-```
+
+```yaml
 Name:              headless-hello-svc
 Namespace:         default
 Labels:            app=ms-hello-dep
@@ -944,7 +1073,8 @@ Events:            <none>
 ```
 
 > kubectl describe svc ms-hello-svc
-```
+
+```yaml
 Name:              ms-hello-svc
 Namespace:         default
 Labels:            app=ms-hello-dep
@@ -960,18 +1090,23 @@ Events:            <none>
 ```
 
 Now let's compare the DNS resolution for both of those 2 services :
+
 > kubectl exec ms-bye-dep-db48f7976-tb9r4 -- busybox nslookup ms-hello-svc
-```
+
+```yaml
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      ms-hello-svc
 Address 1: 10.96.126.57 ms-hello-svc.default.svc.cluster.local
 ```
 
 > kubectl exec ms-bye-dep-db48f7976-tb9r4 -- busybox nslookup headless-hello-svc
-```
+
+```yaml
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      headless-hello-svc
 Address 1: 172.17.0.11 172-17-0-11.ms-hello-svc.default.svc.cluster.local
 Address 2: 172.17.0.10 172-17-0-10.ms-hello-svc.default.svc.cluster.local
@@ -984,6 +1119,7 @@ One typical use case for headless services is with StatefulSets. StatefulSets ar
 -> TODO add section about StatefulSets
 
 Basically, the ExternalName service we describe in this section is also a headless service, but without selectors:
+
 - no clusterIp
 - EXTERNAL-IP (DNS of external service)
 - no EndPoints resources
@@ -993,6 +1129,7 @@ Basically, the ExternalName service we describe in this section is also a headle
 
 This is the default ServiceType.
 Most of the illustrations of this chapter were based on ClusterIp services.
+
 - static virtual ip accessible INSIDE the cluster ONLY
 - this VIP exposes a logical set of pods determined by selectors
 - the logical set of pods constitute the service backend and its actual endpoints
@@ -1000,14 +1137,14 @@ Most of the illustrations of this chapter were based on ClusterIp services.
 - VIP is available on a port, but traffic is forwarded to backend pods (EndPoints) ips on the port their containers are listening on (targetPort)
 
 
-![](pic/curl_exec.png)
+![](pics/curl_exec.png)
 
 
 #### NodePorts
 
 A NodePort service is the most primitive way to get external traffic directly to your service.
 
-![](pic/nodeport_draw.png)
+![](pics/nodeport_draw.png)
 
 
 NodePort, as the name implies,
@@ -1018,7 +1155,7 @@ NodePort, as the name implies,
 
 Then the internal svc will load balance the traffic to its endpoints.
 
-![](pic/nodeport_schema.png)
+![](pics/nodeport_schema.png)
 
 The yaml file below shows the definition of a NodePort service.
 We stick to the dummy applications we've used so far. Basically, in addition to the former *ms-hello-svc* of type "ClusterIp" we created so far, we create a new service, called *np-hello-svc* that will expose the *ms-hello-pods* :
@@ -1061,6 +1198,7 @@ If we run a `dnslookup` from a pod within the cluster on the nodeport service na
 ```
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
 Name:      np-hello-svc
 Address 1: 10.96.242.80 np-hello-svc.default.svc.cluster.local
 ```
@@ -1074,7 +1212,7 @@ If a pod inside the cluster wants to connect to *ms-hello-pods* through *np-hell
 This is the hello world custom node parent%
 ```
 
-![](pic/nodeport_inside.png)
+![](pics/nodeport_inside.png)
 
 This highlights the fact that NotePort services includes creation of ClusterIp, which in the end is the real service traffic is forwarded ro.
 
@@ -1106,14 +1244,14 @@ We use a LoadBalancer service if we would like to have a **single IP** which dis
 **NodePort and ClusterIP Services**, to which the external load balancer routes traffic, are automatically created.
 
 
-![](pic/lb_schema.png)
+![](pics/lb_schema.png)
 
 All a LoadBalancer service does is
 - it creates a NodePort service.
 - it sends a message to the provider who hosts the Kubernetes cluster asking for a loadbalancer to be setup pointing to all external node IPs and specific nodePort.
 
 
-The LoadBalancer is the best option for a production environment, with two caveats:
+The LoadBalancer is the best option for a production environment (compared to NodePort), with two caveats:
 
 - Every Service that you deploy as LoadBalancer will get it’s own IP.
 - The LoadBalancer is usually billed based on the number of exposed services, which can be expensive.
@@ -1121,7 +1259,7 @@ The LoadBalancer is the best option for a production environment, with two cavea
 As we are using minikube we won't be able to deploy a LoadBalancer.
 Nevertheless, as an exaple, we can show you (from another project) an interesting difference between NodePort and LB services:
 
-![](pic/lb_ext.png)
+![](pics/lb_ext.png)
 
 We see that LB generates and external ip address.
 
@@ -1135,7 +1273,6 @@ Important remark - difference between port, targetport and nodeport
 
 Let's look at this example:
 Some times your application inside container serves different services on a different port. Ex:- the actual application can run 8080 and health checks for this application can run on 8089 port of the container. So if you hit the service without port it doesn't know to which port of the container it should redirect the request. Service needs to have a mapping so that it can hit the specific port of the container.
-
 ```yaml
 kind: Service
 apiVersion: v1
@@ -1217,6 +1354,7 @@ spec:
   selector:
     app: mc-mornaft-pods
   type: ClusterIP
+
 ```
 
 > kubectl apply -f illustrations/initial_objects/mc-mornaft-dep.yaml
@@ -1235,12 +1373,3 @@ spec:
                                  Dload  Upload   Total   Spent    Left  Speed
 100    31  100    31    0     0   1230      0 --:--:-- --:--:-- --:--:--  1291This is the good afternoon root
 ```
-
-
-## HANDS_ON
-
-You can now [follow some illustrations](./illu.md) or directly go to [the exercises](./service_exos.md)
-
-## NEXT SESSION
-
-Then, move on to the [volumes](../4-VOLUMES/volumes.md)

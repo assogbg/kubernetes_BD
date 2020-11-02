@@ -15,7 +15,7 @@ spec:
         app: ms-hello-pods
     spec:
       containers:
-      - image: pgolard/ms-hello:v4
-        name: ms-hello
-        ports:
-        - containerPort: 7777
+        - image: pgolard/ms-hello:v4
+          name: ms-hello
+          ports:
+            - containerPort: 7777

@@ -1,15 +1,15 @@
 version: '3.6'
 services:
   testCiro:
-    build: ./testCiro
+    build: ./pod7777
     image: test-ciro
-    container_name: test-ciro
+    container_name: first-pod
     ports:
             - "7777:7777"
   testSavastano:
-    build: ./testSavastano
+    build: ./pod9999
     image: test-savastano
-    container_name: test-savastano
+    container_name: second-pod
     ports:
             - "9999:9999"
   testAuth:

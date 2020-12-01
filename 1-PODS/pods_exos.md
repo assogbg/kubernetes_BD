@@ -14,8 +14,8 @@ Either write it based on kubernetes documentation (https://kubernetes.io/docs/co
 
 #### create 2 pods
 Create two pods with the previous commands:
-- image assogbg/pod_first:v1
-- image assogbg/pod_second:v1
+- image assogbg/assogbg/pod_7777:v1
+- image assogbg/pod_9999:v1
 
 
 <details>
@@ -23,11 +23,17 @@ Create two pods with the previous commands:
     **Hints**
     </summary>
 
-    - > kubectl run --dry-run=client --restart=Never -o yaml firstpod --image=assogbg/pod_first:v1 --port=7777 > first_pod.yaml
+    - > kubectl run --dry-run=client --restart=Never -o yaml firstpod --image=assogbg/pod_7777:v1 --port=7777 > first_pod.yaml
 
-    - > kubectl run --dry-run=client --restart=Never -o yaml secondpod --image=assogbg/pod_second:v1 --port=9999 > second_pod.yaml
+    - > kubectl run --dry-run=client --restart=Never -o yaml secondpod --image=assogbg/pod_9999:v1 --port=9999 > second_pod.yaml
 
 </details>
+
+#### create from yaml
+
+kubectl create -f first_pod.yaml
+kubectl create -f second_pod.yaml
+
 
 #### retrieve their ip adresses
 > kubectl get pods -o wide
@@ -41,25 +47,25 @@ firstpod   1/1     Running   0          22s   172.17.0.2   minikube   <none>    
 #### try to curl them from the pod Container
 > kubectl exec -it firstpod -- /bin/bash
 
-> curl -X GET "localhost:7777/world"
+> curl -X GET "localhost:7777/hello"
 
 > kubectl exec -it secondpod -- /bin/bash
 
-> curl -X GET "localhost:9999/hello"
+> curl -X GET "localhost:9999/world"
 
 
 #### try to curl them from your local machine
-> curl -X GET http:/172.17.0.3:9999/hello
+> curl -X GET http:/172.17.0.3:9999/world
 
-> curl -X GET http:/172.17.0.2:7777/world
+> curl -X GET http:/172.17.0.2:7777/hello
 
 It doesn't work - their ip is only accessible from within the cluster
 So connect on minikube
 > minikube ssh
 
-> curl -X GET http:/172.17.0.3:9999/hello
+> curl -X GET http:/172.17.0.3:9999/world
 
-> curl -X GET http:/172.17.0.2:7777/world
+> curl -X GET http:/172.17.0.2:7777/hello
 
 And this works fine.
 
